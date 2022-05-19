@@ -8,6 +8,7 @@ import Foundation from 'react-native-vector-icons/Foundation'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import validator from 'validator';
 import  Axios  from 'axios';
+import base_url from '../../../base_url';
 
 class Signin extends React.Component {
     state = {
@@ -16,25 +17,51 @@ class Signin extends React.Component {
         is_loading:false
     }
 
-    SignIn = async()=>{
+    SignIn = ()=>{
     
     
-        // if(validator.isMobilePhone(this.state.phone_no) == false){
-        //     Alert.alert("Invalid Phone Number")
-        //     return false;
-        // }
+        if(validator.isMobilePhone(this.state.phone_no) == false){
+            Alert.alert("Invalid Phone Number")
+            return false;
+        }
 
-        // if(this.state.password.length>4 || this.state.password.length<4){
-        //     Alert.alert("Password Must Be at least 4 characters")
-        //     return false;
-        // }
+        if(this.state.password.length>4 || this.state.password.length<4){
+            Alert.alert("Password Must Be  4 characters")
+            return false;
+        }
 
-        // this.setState({is_loading:true})
+        this.setState({is_loading:true})
+        let formData = new FormData()
+        formData.append('phone_no',this.state.phone_no)
+        formData.append('password',this.state.password)
 
-        this.props.navigation.reset({
-                index: 0,
-                routes: [{ name: 'MainNavigator', screen: 'Home' }]
-            });
+        Axios.post(base_url+'/apis/user/login_user',{
+            "phone_no":this.state.phone_no,
+            "password":this.state.password
+        })
+        .then(async(res)=>{
+            if(res.data.msg == "logged in Succesfully"){
+                this.setState({is_loading:false,})
+               await AsyncStorage.setItem("user",JSON.stringify(res.data.user))
+                this.props.navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'MainNavigator', screen: 'Home' }]
+                });
+            }else{
+                Alert.alert(res.data.msg)
+                this.setState({is_loading:false})
+
+                return false
+            }
+        })
+        .catch(err=>{
+            console.log(err)
+            Alert.alert("Something Went Wrong")
+            this.setState({is_loading:false})
+            return false
+        })
+
+       
     }
     render(){
         return(
@@ -62,9 +89,10 @@ class Signin extends React.Component {
                 />
                 </View>
 
-                {this.state.is_loading?<ActivityIndicator size="large" color="white" style={{ alignSelf: 'center' }}/>:null}
+               
 
-                <TouchableOpacity onPress={this.SignIn} style={styles.submit_btn} >
+                <TouchableOpacity disabled={this.state.is_loading} onPress={this.SignIn} style={styles.submit_btn} >
+                     {this.state.is_loading?<ActivityIndicator size="large" color="#193ed1" />:null}
                     
                     <Text style={{ fontSize:16,fontWeight:'bold',color:'#193ed1'}}>Sign In</Text>
                 </TouchableOpacity>
@@ -128,7 +156,7 @@ const styles = StyleSheet.create({
         marginTop:20,
       },
       submit_btn:{
-      
+        flexDirection: 'row',
         borderWidth:1,
         borderColor:"white",
         alignItems: 'center',

@@ -1,11 +1,65 @@
 import React from 'react'
-import {View,Text,StyleSheet,TextInput,Dimensions,Image,ScrollView} from 'react-native'
+import {View,Text,StyleSheet,TextInput,Dimensions,Image,ScrollView,ActivityIndicator,Alert} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import  Axios  from 'axios'
+import base_url from '../../../base_url'
+
 export default class AddhasTag extends React.Component {
     state = {
-        hash_tag:''
+        hash_tag:'',
+        hash_tags:[],
+        is_loading:false
+    }
+
+    add_hashtag = async()=>{
+        const user = await AsyncStorage.getItem("user")
+        const parse = JSON.parse(user)
+        this.setState({is_loading:true})
+        const data = {
+            "user_id":parse._id,
+            "hashtag":this.state.hash_tag
+        }
+        Axios.post(base_url+"/apis/hash_tag/add",data)
+        .then(res=>{
+            Alert.alert(res.data.msg)
+
+             this.setState({is_loading:false})
+            
+        })
+        .catch(err=>{
+            Alert.alert("Something Went Wrong")
+            this.setState({is_loading:false})
+        })
+    }
+
+    getHashTags = async()=>{
+        const user = await AsyncStorage.getItem("user")
+        const parse = JSON.parse(user)
+       
+
+        Axios.get(base_url+"/apis/hash_tag/get_hashtags?user_id="+parse._id)
+        .then(res=>{
+            this.setState({hash_tags:res.data.hash_tags})
+        })
+
+    }
+
+    delete_hash_tag = (id)=>{
+        Axios.get(base_url+"/apis/hash_tag/delete?id="+id)
+        .then(res=>{
+            Alert.alert(res.data.msg)
+            this.getHashTags()
+        })
+        .catch(err=>{
+            Alert.alert("Something Went Wrong")
+        })
+    }
+
+    componentDidMount(){
+        this.getHashTags()
     }
     render(){
         return (
@@ -16,28 +70,26 @@ export default class AddhasTag extends React.Component {
                 />
                 </View>
 
-                <TouchableOpacity  style={styles.submit_btn} >
+                <TouchableOpacity onPress={this.add_hashtag} disabled={this.state.is_loading} style={styles.submit_btn} >
+                {this.state.is_loading?<ActivityIndicator size="large" color="white" />:null}
                     
                     <Text style={{ fontSize:16,fontWeight:'bold',color:'white'}}>Create</Text>
                 </TouchableOpacity>
 
 
                 <ScrollView style={{flex:1}}>
-                    
-                    <View style={styles.item_container}>
-               <Text style={{color:'#BB952D'}}>Cloths</Text>
-                <TouchableOpacity>
-                <FontAwesome name= "trash" color="red" size={20}/>
-                </TouchableOpacity>
-                </View>
+                    {this.state.hash_tags.map(data=>(
+                    <View key={data} style={styles.item_container}>
+                    <Text style={{color:'#BB952D'}}>{data.hash_tag}</Text>
+                        <TouchableOpacity onPress={()=>this.delete_hash_tag(data._id)}>
+                        <FontAwesome name= "trash" color="red" size={20}/>
+                        </TouchableOpacity>
+                        </View>
+                    ))}
+                 
 
 
-                <View style={styles.item_container}>
-               <Text style={{color:'#BB952D'}}>Shirts</Text>
-                <TouchableOpacity>
-                <FontAwesome name= "trash" color="red" size={20}/>
-                </TouchableOpacity>
-                </View>
+             
 
 
                 </ScrollView>
@@ -83,7 +135,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
       },
       submit_btn:{
-      
+        flexDirection: 'row',
         borderWidth:1,
         borderColor:"#193ed1",
         alignItems: 'center',

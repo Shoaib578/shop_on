@@ -4,6 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import Home from '../screens/home';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { NavigationContainer,useRoute } from '@react-navigation/native';
 import Splash from '../screens/splash';
@@ -25,6 +26,8 @@ import SendItem from '../screens/supplier/send_item';
 import OrdersHistory from '../screens/supplier/order_history';
 import ReceivedOrders from '../screens/supplier/received_orders';
 import Profile from '../screens/profile';
+import ViewProduct from '../screens/view_product';
+import SelectUser from '../screens/supplier/send_item/select_user';
 
 
 
@@ -89,6 +92,7 @@ const HomeStack = ({navigation,route})=>(
 
         <Stack.Screen name='cart' component={Cart} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>headerRight(navigation)}}/>
         <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>headerRight(navigation)}}/>
+        <Stack.Screen name='view_item' component={ViewProduct} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>headerRight(navigation)}}/>
 
 
     </Stack.Navigator>
@@ -176,6 +180,7 @@ const SendItemStack = ({navigation})=>(
       <Stack.Screen name='search' component={Search} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
 
       <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='select_user' component={SelectUser} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
 
 
   </Stack.Navigator>
@@ -219,8 +224,9 @@ const ReceivedOrdersyStack = ({navigation})=>(
 
 
 
-const MainNavigator = ()=>(
-    
+const MainNavigator = ()=>{
+
+    return(
     <Drawer.Navigator
   
     drawerContent={(props) => <CustomSidebar {...props} />}>
@@ -368,6 +374,7 @@ const MainNavigator = ()=>(
 
   </Drawer.Navigator>
 )
+    }
 
 
 const AuthNavigator = ()=>(

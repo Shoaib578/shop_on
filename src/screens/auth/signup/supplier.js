@@ -8,6 +8,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import Axios from 'axios'
 import Foundation from 'react-native-vector-icons/Foundation'
 import validator from 'validator'
+import base_url from '../../../base_url'
 class Supplier extends React.Component {
     state = {
         company_name:"",
@@ -55,22 +56,53 @@ class Supplier extends React.Component {
             return false
         }
 
-        if(this.state.primary_contact.length<1){
-            Alert.alert("Please Enter Your Primary Contact")
-            return false
-        }
-
+  
         if(this.state.postal_code.length<1){
             Alert.alert("Please Enter Your Postal Code")
             return false
         }
        
-        if(this.state.password.length<6){
-            Alert.alert("Password Must Be Atleast 6 characters")
-            return false
+        if(this.state.password.length>4 || this.state.password.length<4){
+            Alert.alert("Password Must Be  4 characters")
+            return false;
         }
-
         this.setState({is_loading:true})
+
+        let data = {
+            "role":"supplier",
+            "phone_no":this.state.phone_no,
+            "password":this.state.password,
+            "address":this.state.address,
+            "city":this.state.city,
+            "state":this.state.state,
+            "country":this.state.country,
+            "company_name":this.state.company_name,
+            "company_code":this.state.company_code,
+            "postal_code":this.state.postal_code,
+            "name":this.state.name,
+            "email":this.state.email
+        }
+        Axios.post(base_url+"/apis/user/sign_up",data)
+        .then(res=>{
+           Alert.alert(res.data.msg)
+           this.setState({ company_name:"",
+           company_code:'',
+           password:"",
+           email:"",
+           phone_no:"",
+          
+           postal_code:"",
+           is_loading:false,
+           name:'',
+           address:'',
+           country:'',
+           city:'',
+           state:''})
+        })
+        .catch(err=>{
+            Alert.alert("Something Went Wrong")
+            this.setState({is_loading:false})
+        })
 
       
         
@@ -119,11 +151,7 @@ class Supplier extends React.Component {
             />
             </View>
 
-            <View style={styles.text_input}>
-                <Entypo name="location-pin" style={styles.phoneImageStyle} color="white" size={25}/>
-                <TextInput  placeholder="Postal" value={this.state.postal_code} selectionColor="white" onChangeText={(val)=>this.setState({postal_code:val})} placeholderTextColor="white" style={{flex:1,color:'white'}} 
-                />
-                </View>
+         
 
 
                 <View style={styles.text_input}>
@@ -186,9 +214,9 @@ class Supplier extends React.Component {
 
 
 
-            {this.state.is_loading?<ActivityIndicator size="large" color="white"/>:null}
 
-            <TouchableOpacity onPress={this.SignUp} style={[styles.submit_btn,{marginBottom:20}]} >
+            <TouchableOpacity disabled={this.state.is_loading} onPress={this.SignUp} style={[styles.submit_btn,{marginBottom:20}]} >
+            {this.state.is_loading?<ActivityIndicator size="large" color="#193ed1" />:null}
                 
                 <Text style={{ fontSize:16,fontWeight:'bold',color:'#193ed1'}}>Proceed  {' >'} </Text>
             </TouchableOpacity>
@@ -258,7 +286,7 @@ const styles = StyleSheet.create({
         marginTop:20,
       },
       submit_btn:{
-      
+        flexDirection: 'row',
         borderWidth:1,
         borderColor:"white",
         alignItems: 'center',

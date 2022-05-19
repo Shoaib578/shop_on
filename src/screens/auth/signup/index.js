@@ -4,7 +4,7 @@ import Supplier from './supplier'
 
 export default class Signup extends React.Component {
     render(){
-        if(this.props.route.params.category == 'suppier') {
+        if(this.props.route.params.category == 'supplier') {
             return <Supplier />
         }else{
             return <Buyer />

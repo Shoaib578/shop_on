@@ -8,12 +8,12 @@ export default class Home extends React.Component {
             
                 <ScrollView >
                      <View style={styles.container}>
-                     <Product />
-                    <Product />
-                    <Product />
-                    <Product />
-                    <Product />
-                    <Product />
+                     <Product navigation={this.props.navigation}/>
+                    <Product navigation={this.props.navigation}/>
+                    <Product navigation={this.props.navigation}/>
+                    <Product navigation={this.props.navigation}/>
+                    <Product navigation={this.props.navigation}/>
+                    <Product navigation={this.props.navigation}/>
                      </View>
                    
                 </ScrollView>

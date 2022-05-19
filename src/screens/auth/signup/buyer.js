@@ -7,7 +7,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import Axios from 'axios';
 import validator from 'validator'
 
-
+import base_url from '../../../base_url'
 
 
 
@@ -41,13 +41,31 @@ class Buyer extends React.Component {
 
       
       
-        if(this.state.password.length<6){
-            Alert.alert("Password Must Be Atleast 6 characters")
-            return false
+        if(this.state.password.length>4 || this.state.password.length<4){
+            Alert.alert("Password Must Be  4 characters")
+            return false;
         }
-        console.log("Validated")
+        
         this.setState({is_loading:true})
-       
+        
+        const data = {
+            "name":this.state.name,
+            "phone_no":this.state.phone_no,
+            "password":this.state.password,
+            "role":"buyer"
+        }
+
+        Axios.post(base_url+'/apis/user/sign_up',data)
+        .then(res=>{
+            Alert.alert(res.data.msg)
+            this.setState({is_loading:false,name:"",phone_no:"",password:""})
+            return true
+        })
+        .catch(err=>{
+            Alert.alert("Something Went Wrong")
+            this.setState({is_loading:false})
+            return false
+        })
 
       
     }
@@ -63,7 +81,7 @@ class Buyer extends React.Component {
 
                 <View style={styles.text_input}>
                 <Feather name="user" style={styles.phoneImageStyle} color="white" size={25}/>
-                <TextInput placeholder=" Name" value={this.state.name} selectionColor="white"  placeholderTextColor="#DBDBDB" onChangeText={(val)=>this.setState({first_name:val})} style={{flex:1,color:'white'}} 
+                <TextInput placeholder=" Name" value={this.state.name} selectionColor="white"  placeholderTextColor="#DBDBDB" onChangeText={(val)=>this.setState({name:val})} style={{flex:1,color:'white'}} 
                 />
                 </View>
                
@@ -87,8 +105,8 @@ class Buyer extends React.Component {
                
 
 
-                {this.state.is_loading?<ActivityIndicator size="large" color="white" />:null}
                 <TouchableOpacity onPress={this.SignUp}  style={styles.submit_btn} >
+                {this.state.is_loading?<ActivityIndicator size="large" color="#193ed1" />:null}
                     
                     <Text style={{ fontSize:16,fontWeight:'bold',color:'#193ed1'}}>Proceed  {' >'} </Text>
                 </TouchableOpacity>
@@ -158,7 +176,7 @@ const styles = StyleSheet.create({
         marginTop:20,
       },
       submit_btn:{
-      
+        flexDirection: 'row',
         borderWidth:1,
         borderColor:"white",
         alignItems: 'center',

@@ -27,6 +27,18 @@ export default class ReceivedOrderContainer extends React.Component{
 
                         </View>
 
+
+                        
+
+
+                        </View>
+                        <View style={{flexDirection: 'row',left:5,marginTop:5}}>
+                        <Text style={{color:'black',}}>Address : </Text>
+
+                        
+                            <Text style={{color:'black',fontWeight:'bold',marginLeft:5}}>Islamabad</Text>
+                       
+
                         </View>
                     </View>
                     
