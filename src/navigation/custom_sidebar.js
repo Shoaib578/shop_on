@@ -463,7 +463,7 @@ import Feather from 'react-native-vector-icons/Feather'
                 
                 onPress={() => navigation.navigate(route.name)}
               />
-              }else if( drawerLabel == "Add Item"){
+              }else if( drawerLabel == "Add item"){
                 return <DrawerItem
                 key={route.key}
                 style={{marginTop:drawerLabel=="Home"?20:10,backgroundColor:'#F0F0F0',

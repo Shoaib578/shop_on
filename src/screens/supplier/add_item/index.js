@@ -1,15 +1,18 @@
 import React from 'react';
-import {View,Text,Button, ScrollView, Dimensions,TextInput,TouchableOpacity,Image, ActivityIndicator, Alert,StyleSheet} from 'react-native';
+import {View,Text,Button, ScrollView, Dimensions,TextInput,TouchableOpacity,Image, ActivityIndicator, Alert,StyleSheet,Platform} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {Picker} from '@react-native-picker/picker';
 import * as ImagePicker from "react-native-image-picker"
 import Tags from "react-native-tags";
+import Axios from 'axios'
+import base_url from '../../../base_url'
 export default class Additem extends React.Component {
     state = {
         product_image1:'',
         product_image2:'',
         product_image3:'',
         colors:[],
+        hash_tags:[],
         product_name:'',
         product_description:'',
         sku_code:'',
@@ -37,6 +40,37 @@ export default class Additem extends React.Component {
         })
     
      
+      }
+
+
+      validate = ()=>{
+        if(this.state.product_image1 == null || this.state.product_image2 == null || this.state.product_image3 == null){
+          Alert.alert("3 product images are required")
+          return false
+        }
+
+        if(this.state.hash_tag == null){
+          Alert.alert("Hash tag is required")
+        }
+
+
+        if(this.state.product_name == null){
+          Alert.alert("Product Name Field is required")
+          return false
+
+        }
+        
+        if(this.state.product_description == null){
+          Alert.alert("Product Description Field is required")
+          return false
+        }
+
+        if(this.state.colors == null){
+          Alert.alert("Color is required")
+          return false
+        }
+
+        return true
       }
 
       pickImage2 = async () => {
@@ -80,6 +114,108 @@ export default class Additem extends React.Component {
      
       }
 
+    getHashTags = async()=>{
+      const user = await AsyncStorage.getItem("user")
+      const parse = JSON.parse(user)
+      Axios.get(base_url+'/apis/hash_tag/get_hashtags?user_id='+parse._id)
+      .then(res=>{
+        console.log(res.data.hash_tags)
+        this.setState({hash_tags:res.data.hash_tags})
+      })
+    }
+
+
+    add_item = async()=>{
+      const user = await AsyncStorage.getItem("user")
+      const parse = JSON.parse(user)
+      const validated = this.validate()
+      if(validated){
+        this.setState({is_loading:true})
+        var formData= new FormData()
+
+       
+          formData.append('item_name',this.state.product_name)
+          formData.append('item_description',this.state.product_description)
+          formData.append('price',this.state.price)
+          formData.append('sku_code',this.state.sku_code)
+          formData.append('colors',this.state.colors)
+          formData.append('hash_tag',this.state.hash_tag)
+          formData.append('added_by',parse._id)
+
+          
+          formData.append('image1',{
+            name: this.state.product_image1.fileName,
+            type: this.state.product_image1.type,
+            uri: Platform.OS === 'ios' ? this.state.product_image1.uri.replace('file://', '') : this.state.product_image1.uri,
+          })
+        formData.append('image2',{
+            name: this.state.product_image2.fileName,
+            type: this.state.product_image2.type,
+            uri: Platform.OS === 'ios' ? this.state.product_image2.uri.replace('file://', '') : this.state.product_image2.uri,
+          })
+
+
+         formData.append('image3',{
+            name: this.state.product_image3.fileName,
+            type: this.state.product_image3.type,
+            uri: Platform.OS === 'ios' ? this.state.product_image3.uri.replace('file://', '') : this.state.product_image3.uri,
+          })
+
+
+       
+       
+
+        
+
+
+
+
+
+
+
+
+        try{
+          fetch(base_url+'/apis/item/add_item',{
+            body:formData,
+            method: 'POST',
+          })
+          this.setState({
+            product_image2:'',
+            product_image1:'',
+
+            product_image3:'',
+            colors:null,
+           
+            product_name:'',
+            product_description:'',
+            sku_code:'',
+            hash_tag:'',
+            price:'',
+            is_loading:false
+          })
+          Alert.alert("Added Succesfully")
+
+        }catch(err){
+          Alert.alert("Something Went Wrong")
+          this.setState({is_loading:false})
+        }
+          
+      
+      
+      
+      }
+      
+        
+
+    }
+
+    componentDidMount(){
+      this.getHashTags()
+      this.props.navigation.addListener("focus",()=>{
+        this.getHashTags()
+      })
+    }
+
     render(){
         return (
             <View  style={{marginTop:20,alignItems: 'center',flex:1}}>
@@ -116,11 +252,12 @@ export default class Additem extends React.Component {
             mode="dropdown">
             <Picker.Item label="Select HashTag"  value=" " />
 
-            
-            <Picker.Item label={'hashTag'}  value={'hashtag'} />
-            <Picker.Item label={'hashTag'}  value={'hashtag'} />
-            <Picker.Item label={'hashTag'}  value={'hashtag'} />
-            <Picker.Item label={'hashTag'}  value={'hashtag'} />
+            {this.state.hash_tags.map(data=>{
+              
+            return <Picker.Item label={data.hash_tag}  value={data.hash_tag} />
+
+            })}
+           
 
             
 
@@ -211,7 +348,7 @@ export default class Additem extends React.Component {
                 textInputProps={{
                 placeholder: "Add Colors"
                 }}
-                initialTags={[]}
+                initialTags={this.state.colors}
                 onChangeTags={tags =>{
                   console.log(tags)
                   this.setState({colors: tags})}}
@@ -228,8 +365,8 @@ export default class Additem extends React.Component {
                 )}
             />
            
-            <TouchableOpacity onPress={this.AddProduct} style={[styles.AddProductBtn,{flexDirection:'row'}]}>
-            {this.state.add_product_loading?<ActivityIndicator size="large" color="white6" />:null}
+            <TouchableOpacity onPress={this.add_item} style={[styles.AddProductBtn,{flexDirection:'row'}]}>
+            {this.state.is_loading?<ActivityIndicator size="large" color="white" />:null}
 
                 <Text style={{color:'white'}}>Add Product</Text>
             </TouchableOpacity>
@@ -244,6 +381,7 @@ export default class Additem extends React.Component {
 
 const styles = StyleSheet.create({
     AddProductBtn:{
+        
         backgroundColor:'#193ed1',
         borderRadius:5,
         borderColor:"#193ed1",

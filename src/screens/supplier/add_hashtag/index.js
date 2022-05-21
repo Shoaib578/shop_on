@@ -27,6 +27,8 @@ export default class AddhasTag extends React.Component {
             Alert.alert(res.data.msg)
 
              this.setState({is_loading:false})
+            this.getHashTags()
+
             
         })
         .catch(err=>{

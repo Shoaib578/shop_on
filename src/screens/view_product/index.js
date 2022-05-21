@@ -8,6 +8,8 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import  Axios  from 'axios';
+import base_url from '../../base_url';
 
 const {width} = Dimensions.get('window');
 const height = width*100/180
@@ -24,24 +26,33 @@ class ViewProduct extends React.Component {
     }
 
    
-
+    ViewItem = ()=>{
+        Axios.get(base_url+'/apis/item/view_item?item_id='+this.props.route.params.id)
+        .then(res=>{
+            
+            this.setState({data:res.data.item})
+        })
+    }
    
 
 
   
-
+    componentDidMount(){
+        this.ViewItem()
+    }
 
     render(){
         if(this.state.isLoading == false){
-            return <View>
+          
+                return <View>
 
-     
-         
-                <ScrollView >
+              
+                   
+                    <ScrollView >
                     <SliderBox
                     images={[
-                        {uri:'https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8aGFuZGJhZ3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60'},
-                        {uri:'https://images.unsplash.com/photo-1566150902887-9679ecc155ba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8aGFuZGJhZ3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60'},
+                        {uri:base_url+'/uploads/'+this.state.data.item_image1},
+                        {uri:base_url+'/uploads/'+this.state.data.item_image2},
                         {uri:"https://images.unsplash.com/photo-1598532163257-ae3c6b2524b6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=763&q=80"},
 
     
@@ -119,8 +130,13 @@ class ViewProduct extends React.Component {
                     </TouchableOpacity>
     
                 </ScrollView>
+
+         
+               
           
             </View>
+           
+         
        
     }else{
         return(

@@ -28,6 +28,7 @@ import ReceivedOrders from '../screens/supplier/received_orders';
 import Profile from '../screens/profile';
 import ViewProduct from '../screens/view_product';
 import SelectUser from '../screens/supplier/send_item/select_user';
+import ViewGroup from '../screens/supplier/create_group/view_group';
 
 
 
@@ -164,6 +165,7 @@ const CreateGroupStack = ({navigation})=>(
 
       <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
 
+      <Stack.Screen name='view_group' component={ViewGroup} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
 
   </Stack.Navigator>
 )

@@ -77,7 +77,7 @@ export default class CreateGroup extends React.Component {
 
                 <ScrollView style={{flex:1}}>
                         {this.state.groups.map(data=>(
-                        <View key={data} style={styles.item_container}>
+                        <TouchableOpacity onPress={()=>this.props.navigation.navigate('view_group',{group_id:data._id})} key={data} style={styles.item_container}>
                         <View style={{flexDirection: 'row',}}>
                         <FontAwesome name= "user-circle-o" color="red" size={20}/>
 
@@ -90,7 +90,7 @@ export default class CreateGroup extends React.Component {
 
                         </TouchableOpacity>
 
-                    </View>
+                    </TouchableOpacity>
                         ))}
                
 
