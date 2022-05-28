@@ -27,6 +27,7 @@ export default class CreateGroup extends React.Component {
         .then(res=>{
             Alert.alert(res.data.msg)
             this.setState({is_loading:false})
+            this.getGroups()
 
         })
         .catch(err=>{

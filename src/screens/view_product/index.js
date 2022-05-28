@@ -10,35 +10,81 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import  Axios  from 'axios';
 import base_url from '../../base_url';
+import {Picker} from '@react-native-picker/picker';
 
 const {width} = Dimensions.get('window');
 const height = width*100/180
 class ViewProduct extends React.Component {
     state = {
         is_favorite:false,
-       
+        role:'',
         data:[],
         isLoading:false,
+        cart_loading:false,
         quantity:0,
         quantit_btn_available:false,
         page:0,
         my_id:'',
+        color:'',
+        size:''
     }
 
    
     ViewItem = ()=>{
         Axios.get(base_url+'/apis/item/view_item?item_id='+this.props.route.params.id)
         .then(res=>{
-            
+            console.log(res.data.item)
             this.setState({data:res.data.item})
         })
     }
    
+    addToCart = async()=>{
+        const user= await AsyncStorage.getItem("user")
+        const parse = JSON.parse(user)
+        if(this.state.color == null || this.state.size == null || this.state.quantity == null){
+            Alert.alert("Fields are required")
+            return false
+        }else{
+            this.setState({cart_loading:true})
+        let data = {
+            "cart_user":parse._id,
+            "item_id":this.props.route.params.id,
+            "currency":this.state.data.currency,
+            "item_owner_id":this.state.data.added_by,
+            "amount":this.state.quantity,
+            "size":this.state.size,
+            "color":this.state.color
+        }
+        Axios.post(base_url+"/apis/cart/add_cart",data)
+        .then(res=>{
+            Alert.alert(res.data.msg)
+            this.setState({cart_loading:false})
 
+        })
+        .catch(err=>{
+            Alert.alert("Something Went Wrong")
+        this.setState({cart_loading:false})
 
+        })
+        }
+
+        
+        
+    }
+
+ 
+    getUserRole = async()=>{
+        const user = await AsyncStorage.getItem("user")
+        const parse = JSON.parse(user)
+        this.setState({role:parse.role})
+    }
   
     componentDidMount(){
-        this.ViewItem()
+        this.getUserRole()
+        .then(()=>{
+            this.ViewItem()
+
+        })
     }
 
     render(){
@@ -53,7 +99,7 @@ class ViewProduct extends React.Component {
                     images={[
                         {uri:base_url+'/uploads/'+this.state.data.item_image1},
                         {uri:base_url+'/uploads/'+this.state.data.item_image2},
-                        {uri:"https://images.unsplash.com/photo-1598532163257-ae3c6b2524b6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=763&q=80"},
+                        {uri:base_url+'/uploads/'+this.state.data.item_image3},
 
     
                     ]}
@@ -74,7 +120,7 @@ class ViewProduct extends React.Component {
     
     
                    
-                    <Text style={{fontSize:18,fontWeight:'bold',color:'black',padding:10,marginLeft:7}}>New Bag</Text>
+                    <Text style={{fontSize:18,fontWeight:'bold',color:'black',padding:10,marginLeft:7}}>{this.state.data.item_name}</Text>
     
                    
     
@@ -83,21 +129,20 @@ class ViewProduct extends React.Component {
     
                     <View style={{ flexDirection:'row',justifyContent:'space-between',marginTop:10,borderBottomWidth:1,borderColor:'black',width:'95%' }}>
                     <Text style={{ fontSize:15 }}>Price</Text>
-                    <Text style={{ right:20,fontSize:15 }}>20$</Text>
+                    <Text style={{ right:20,fontSize:15 }}>{this.state.data.price}{this.state.data.currency}</Text>
                     </View>
     
     
     
                     <View style={{ flexDirection:'row',justifyContent:'space-between',marginTop:10,borderBottomWidth:1,borderColor:'black',width:'95%' }}>
                     <Text style={{ fontSize:15 }}>SKU Code</Text>
-                    <Text style={{ right:20,fontSize:15 }}>23asd </Text>
+                    <Text style={{ right:20,fontSize:15 }}>{this.state.data.sku_code} </Text>
                     </View>
     
-    
-                    <View style={{ flexDirection:'row',justifyContent:'space-between',marginTop:10,borderBottomWidth:1,borderColor:'black',width:'95%' }}>
-                    <Text style={{ fontSize:15 }}>Colours</Text>
-                    <Text style={{ right:20,fontSize:15 }}>blue, green, yellow</Text>
-                    </View>
+                  
+
+
+                  
 
 
                   </View>
@@ -106,15 +151,15 @@ class ViewProduct extends React.Component {
                     <View style={{padding:15,width:'95%'}}>
                     <Text style={{fontWeight:'bold',color:'#57b5b6'}}>Description : </Text>
                     <ReadMore numberOfLines={3} seeMoreStyle={{color:'#57b5b6'}} seeLessStyle={{color:'#57b5b6'}} style={{fontSize:14}}>
-                    {
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                    }
+                   
+                        {this.state.data.item_description}
+                   
                     </ReadMore>
                     </View>
                     
     
                    
-
+                    {this.state.role == "buyer"?<View>
 
                     <Text style={{marginLeft:10}}>Quantity*</Text>
     
@@ -122,13 +167,67 @@ class ViewProduct extends React.Component {
                     <TextInput placeholder="" value={this.state.quantity.toString()} onChangeText={(val)=>this.setState({quantity:val})} keyboardType="numeric"  placeholderTextColor="black" style={{flex:1,color:'black'}} 
                     />
                     </View>
+                    <Text style={{marginLeft:10,top:10}}>Color*</Text>
+
+                    <View style={{ borderWidth:1,borderColor:'#57b5b6',borderRadius:5,width:'95%',marginTop:20,alignSelf:'center',height:50 }}>
+                <Picker
+
+                selectedValue={this.state.color}
+                onValueChange={(val)=>{this.setState({color:val})}}
+
+                mode="dropdown">
+                <Picker.Item label="Select Color"  value=" " />
+
+                {this.state.data.colors?this.state.data.colors.split(",").map((data,index)=>{
+                  
+                return <Picker.Item label={data} key={index} value={data} />
+
+                }):null}
+
+
+
+
+                </Picker>
+
+                </View>
+
+
+                    <Text style={{marginLeft:10,top:10}}>Size*</Text>
+
+                    <View style={{ borderWidth:1,borderColor:'#57b5b6',borderRadius:5,width:'95%',marginTop:20,height:50,alignSelf:'center' }}>
+                <Picker
+
+                selectedValue={this.state.size}
+                onValueChange={(val)=>{this.setState({size:val})}}
+
+                mode="dropdown">
+                <Picker.Item label="Select Size"  value=" " />
+
+                {this.state.data.sizes?this.state.data.sizes.split(",").map((data,index)=>{
+                  
+                return <Picker.Item label={data} key={index} value={data} />
+
+                }):null}
+
+
+
+
+                </Picker>
+
+                </View>
     
-                    <TouchableOpacity disabled={this.state.quantit_btn_available} style={[styles.profile_screen_card,{justifyContent:'center',backgroundColor:'#57b5b6',marginBottom:50}]} >
+                    <TouchableOpacity disabled={this.state.cart_loading} onPress={this.addToCart} style={[styles.profile_screen_card,{backgroundColor:'#57b5b6',marginBottom:50}]} >
+                   
+                    {this.state.cart_loading?<ActivityIndicator size="large" color="#193ed1" />:null}
+                   
+                    <View style={{flexDirection:'row'}}>
                     <FontAwesome name="shopping-cart" size={25} color="white" style={{marginLeft:'5%'}}/>
                             
-                    <Text style={{ fontSize:16,fontWeight:'bold',color:'white',marginLeft:'5%'}}>Add To Cart</Text>
+                            <Text style={{ fontSize:16,fontWeight:'bold',color:'white',marginLeft:'5%'}}>Add To Cart</Text>
+                    </View>
+                   
                     </TouchableOpacity>
-    
+                    </View>:null}
                 </ScrollView>
 
          
@@ -162,7 +261,7 @@ const styles = StyleSheet.create({
         marginTop:20,
       },
       profile_screen_card:{
-  
+        justifyContent:'center',
         borderWidth:1,
         borderColor:'white',
         padding:10,

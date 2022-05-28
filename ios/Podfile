@@ -23,6 +23,8 @@ target 'shop_on' do
 
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
 
+  pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
+
   target 'shop_onTests' do
     inherit! :complete
     # Pods for testing

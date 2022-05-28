@@ -22,10 +22,22 @@ export default class Splash extends React.Component {
         
         setTimeout(()=>{
           if(this.state.isLoggedIn){
-            this.props.navigation.reset({
+            if(parse.role == "supplier"){
+              this.props.navigation.reset({
+                index: 0,
+                routes: [{ name: 'SupplierNavigator', screen: 'Dashboard' }]
+            });
+            
+            }else{
+              this.props.navigation.reset({
                 index: 0,
                 routes: [{ name: 'MainNavigator', screen: 'Home' }]
             });
+
+
+              
+            }
+           
         }else{
             this.props.navigation.reset({
                 index: 0,

@@ -29,11 +29,17 @@ import Profile from '../screens/profile';
 import ViewProduct from '../screens/view_product';
 import SelectUser from '../screens/supplier/send_item/select_user';
 import ViewGroup from '../screens/supplier/create_group/view_group';
+import SupplierCustomSidebar from './supplier_custom_sidebase';
+import ViewSupplier from '../screens/supplier/view_supplier';
+import ViewBuyer from '../screens/buyer/view_buyer';
+import Colors from '../screens/supplier/colors';
+import Size from '../screens/supplier/size';
 
 
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
+let role =""
 
 
 
@@ -43,6 +49,9 @@ export default function  RootNavigator (){
         
         
         <Stack.Screen name='MainNavigator' component={MainNavigator} options={{headerShown:false}}/>
+        <Stack.Screen name='SupplierNavigator' component={SupplierNavigator} options={{headerShown:false}}/>
+
+        
         <Stack.Screen name='SplashNavigator' component={SplashNavigator} options={{headerShown:false}}/>
         <Stack.Screen name='AuthNavigator' component={AuthNavigator} options={{headerShown:false}}/>
 
@@ -54,17 +63,23 @@ export default function  RootNavigator (){
 
 
 const headerRight = (navigation)=>{
-    const route = useRoute();
 
-    return    <View style={{flexDirection: 'row',justifyContent:'space-between'}}>
-        {route.name != 'search'?<TouchableOpacity onPress={()=>navigation.navigate('search')} style={{right:23}}>
-        <AntDesign name="search1" color="black" size={25}/>
-        </TouchableOpacity>:null}
+  const route = useRoute();
 
-       {route.name != 'cart'?<TouchableOpacity onPress={()=>navigation.navigate('cart')}>
-            <MaterialCommunityIcons name="purse-outline" color="black" size={25}/>
-         </TouchableOpacity>:null}
-    </View>
+    
+   
+      return( 
+      <View style={{flexDirection: 'row',justifyContent:'space-between'}}>
+      {route.name != 'search'?<TouchableOpacity onPress={()=>navigation.navigate('search')} style={{right:23}}>
+      <AntDesign name="search1" color="black" size={25}/>
+      </TouchableOpacity>:null}
+
+     {route.name != 'cart'?<TouchableOpacity onPress={()=>navigation.navigate('cart')}>
+          <MaterialCommunityIcons name="purse-outline" color="black" size={25}/>
+       </TouchableOpacity>:null}
+  </View>
+      )
+   
 }
 
 
@@ -85,21 +100,36 @@ const supplierheaderRight =  (navigation)=>{
 const HomeStack = ({navigation,route})=>(
     <Stack.Navigator  screenOptions={{headerTitle:'Home',headerLeft:()=><TouchableWithoutFeedback onPress={()=>navigation.openDrawer()} style={{width:30,height:30}}>
     <Image style={{width:30,height:30}} source={require('../assets/images/Menu.png')}/>
-     </TouchableWithoutFeedback> 
+     </TouchableWithoutFeedback>,
+     headerRight:()=>headerRight(navigation)
      }}>
-        <Stack.Screen name='home_screen' component={Home} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>headerRight(navigation)}}/>
+        <Stack.Screen name='home_screen' component={Home} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',}}/>
 
-        <Stack.Screen name='search' component={Search} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>headerRight(navigation)}}/>
+        <Stack.Screen name='search' component={Search} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center'}}/>
 
-        <Stack.Screen name='cart' component={Cart} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>headerRight(navigation)}}/>
-        <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>headerRight(navigation)}}/>
-        <Stack.Screen name='view_item' component={ViewProduct} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>headerRight(navigation)}}/>
+        <Stack.Screen name='cart' component={Cart} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center'}}/>
+        <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center'}}/>
+        <Stack.Screen name='view_item' component={ViewProduct} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center'}}/>
 
 
     </Stack.Navigator>
 )
 
-  
+const DashboardStack = ({navigation,route})=>(
+  <Stack.Navigator  screenOptions={{headerTitle:'Home',headerLeft:()=><TouchableWithoutFeedback onPress={()=>navigation.openDrawer()} style={{width:30,height:30}}>
+  <Image style={{width:30,height:30}} source={require('../assets/images/Menu.png')}/>
+   </TouchableWithoutFeedback> 
+   }}>
+      <Stack.Screen name='dashboard_screen' component={Home} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center'}}/>
+
+     
+      <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center'}}/>
+      <Stack.Screen name='view_item' component={ViewProduct} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center'}}/>
+
+
+  </Stack.Navigator>
+)
+
 const OrderStack = ({navigation})=>(
   <Stack.Navigator  screenOptions={{headerTitle:'Home',headerLeft:()=><TouchableWithoutFeedback onPress={()=>navigation.openDrawer()} style={{width:30,height:30}}>
   <Image style={{width:30,height:30}} source={require('../assets/images/Menu.png')}/>
@@ -110,6 +140,7 @@ const OrderStack = ({navigation})=>(
       <Stack.Screen name='search' component={Search} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>headerRight(navigation)}}/>
 
       <Stack.Screen name='cart' component={Cart} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>headerRight(navigation)}}/>
+      <Stack.Screen name='view_supplier' component={ViewSupplier} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>headerRight(navigation)}}/>
 
       <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>headerRight(navigation)}}/>
 
@@ -125,11 +156,11 @@ const HashTagsStack = ({navigation})=>(
   <Image style={{width:30,height:30}} source={require('../assets/images/Menu.png')}/>
    </TouchableWithoutFeedback> 
    }}>
-      <Stack.Screen name='hash_tags_screen' component={AddhasTag} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='hash_tags_screen' component={AddhasTag} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center'}}/>
 
-      <Stack.Screen name='search' component={Search} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='search' component={Search} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center'}}/>
 
-      <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
 
   </Stack.Navigator>
@@ -142,10 +173,10 @@ const AddItemStack = ({navigation})=>(
   <Image style={{width:30,height:30}} source={require('../assets/images/Menu.png')}/>
    </TouchableWithoutFeedback> 
    }}>
-      <Stack.Screen name='add_item_screen' component={Additem} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='add_item_screen' component={Additem} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
-      <Stack.Screen name='search' component={Search} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
-      <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='search' component={Search} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
+      <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
 
 
@@ -159,30 +190,52 @@ const CreateGroupStack = ({navigation})=>(
   <Image style={{width:30,height:30}} source={require('../assets/images/Menu.png')}/>
    </TouchableWithoutFeedback> 
    }}>
-      <Stack.Screen name='create_group_screen' component={CreateGroup} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='create_group_screen' component={CreateGroup} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
-      <Stack.Screen name='search' component={Search} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='search' component={Search} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
-      <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
-      <Stack.Screen name='view_group' component={ViewGroup} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='view_group' component={ViewGroup} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
   </Stack.Navigator>
 )
 
+const ColorsStack = ({navigation})=>(
+<Stack.Navigator  screenOptions={{headerTitle:'Create Group',headerLeft:()=><TouchableWithoutFeedback onPress={()=>navigation.openDrawer()} style={{width:30,height:30}}>
+  <Image style={{width:30,height:30}} source={require('../assets/images/Menu.png')}/>
+   </TouchableWithoutFeedback> 
+   }}>
+
+<Stack.Screen name='colors' component={Colors} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
 
+   </Stack.Navigator>
+)
+
+
+const SizeStack = ({navigation})=>(
+  <Stack.Navigator  screenOptions={{headerTitle:'Create Group',headerLeft:()=><TouchableWithoutFeedback onPress={()=>navigation.openDrawer()} style={{width:30,height:30}}>
+  <Image style={{width:30,height:30}} source={require('../assets/images/Menu.png')}/>
+   </TouchableWithoutFeedback> 
+   }}>
+
+<Stack.Screen name='size' component={Size} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
+
+
+   </Stack.Navigator>
+)
 const SendItemStack = ({navigation})=>(
   <Stack.Navigator  screenOptions={{headerTitle:'Send Item',headerLeft:()=><TouchableWithoutFeedback onPress={()=>navigation.openDrawer()} style={{width:30,height:30}}>
   <Image style={{width:30,height:30}} source={require('../assets/images/Menu.png')}/>
    </TouchableWithoutFeedback> 
    }}>
-      <Stack.Screen name='send_item_screen' component={SendItem} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='send_item_screen' component={SendItem} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
-      <Stack.Screen name='search' component={Search} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='search' component={Search} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
-      <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
-      <Stack.Screen name='select_user' component={SelectUser} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
+      <Stack.Screen name='select_user' component={SelectUser} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
 
   </Stack.Navigator>
@@ -195,11 +248,13 @@ const ordersHistoryStack = ({navigation})=>(
   <Image style={{width:30,height:30}} source={require('../assets/images/Menu.png')}/>
    </TouchableWithoutFeedback> 
    }}>
-      <Stack.Screen name='orders_history_screen' component={OrdersHistory} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='orders_history_screen' component={OrdersHistory} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
-      <Stack.Screen name='search' component={Search} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='search' component={Search} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
+      <Stack.Screen name='view_buyer' component={ViewBuyer} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
+      <Stack.Screen name='view_supplier' component={ViewSupplier} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>headerRight(navigation)}}/>
 
-      <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
 
   </Stack.Navigator>
@@ -211,12 +266,13 @@ const ReceivedOrdersyStack = ({navigation})=>(
   <Image style={{width:30,height:30}} source={require('../assets/images/Menu.png')}/>
    </TouchableWithoutFeedback> 
    }}>
-      <Stack.Screen name='received_orders_screen' component={ReceivedOrders} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='received_orders_screen' component={ReceivedOrders} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
-      <Stack.Screen name='search' component={Search} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='search' component={Search} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
-      <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center',headerRight:()=>supplierheaderRight(navigation)}}/>
+      <Stack.Screen name='profile' component={Profile} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
+      <Stack.Screen name='view_buyer' component={ViewBuyer} options={{headerTitle:()=><Text style={{fontSize:18,fontFamily:'JosefinSans',color:'black',opacity:0.8}}>Shop-ON</Text>,headerTitleAlign: 'center' }}/>
 
   </Stack.Navigator>
 )
@@ -224,50 +280,27 @@ const ReceivedOrdersyStack = ({navigation})=>(
 //Supplier Stacks End
 
 
-
-
-const MainNavigator = ()=>{
-
-    return(
+const SupplierNavigator = ()=>{
+  return(
     <Drawer.Navigator
   
-    drawerContent={(props) => <CustomSidebar {...props} />}>
-     {/* Buyer drawers start */}
+    drawerContent={(props) => <SupplierCustomSidebar {...props} />}>
     <Drawer.Screen
-      name="Home"
+      name="Dashboard"
       options={{
         
-        drawerLabel: 'Home',
+        drawerLabel: 'Dashboard',
         
         activeTintColor: '#193ed1',
         
         headerShown:false,
        
       }}
-      component={HomeStack}
+      component={DashboardStack}
     />
 
-    
 
-    <Drawer.Screen
-      name="orders"
-      options={{
-        
-        drawerLabel: 'Orders',
-        
-        activeTintColor: '#193ed1',
-       
-        headerShown:false,
-       
-      }}
-      component={OrderStack}
-    />
-
-     {/* End Buyer drawers */}
-
-
-    {/* Supplier Drawers Start */}
-    <Drawer.Screen
+  <Drawer.Screen
       name="Hash Tags"
       options={{
         
@@ -282,13 +315,7 @@ const MainNavigator = ()=>{
     />
 
 
-
-
-
-
-
-
-  <Drawer.Screen
+    <Drawer.Screen
       name="Received Orders"
       options={{
         
@@ -321,7 +348,33 @@ const MainNavigator = ()=>{
     />
 
 
+<Drawer.Screen
+      name="Colors"
+      options={{
+        
+        drawerLabel: 'Colors',
+        
+        activeTintColor: '#193ed1',
+       
+        headerShown:false,
+       
+      }}
+      component={ColorsStack}
+    />
 
+<Drawer.Screen
+      name="Sizes"
+      options={{
+        
+        drawerLabel: 'Sizes',
+        
+        activeTintColor: '#193ed1',
+       
+        headerShown:false,
+       
+      }}
+      component={SizeStack}
+    />
 
 
   <Drawer.Screen
@@ -371,7 +424,65 @@ const MainNavigator = ()=>{
 
 
 
-    {/* Supplier Drawer End */}
+    </Drawer.Navigator>
+  )
+}
+
+const MainNavigator = ()=>{
+
+    return(
+    <Drawer.Navigator
+  
+    drawerContent={(props) => <CustomSidebar {...props} />}>
+    
+
+     
+
+
+    <Drawer.Screen
+      name="Home"
+      options={{
+        
+        drawerLabel: 'Home',
+        
+        activeTintColor: '#193ed1',
+        
+        headerShown:false,
+       
+      }}
+      component={HomeStack}
+    />
+
+    
+
+    <Drawer.Screen
+      name="orders"
+      options={{
+        
+        drawerLabel: 'Orders',
+        
+        activeTintColor: '#193ed1',
+       
+        headerShown:false,
+       
+      }}
+      component={OrderStack}
+    />
+
+
+<Drawer.Screen
+      name="Orders History"
+      options={{
+        
+        drawerLabel: 'Orders History',
+        
+        activeTintColor: '#193ed1',
+       
+        headerShown:false,
+       
+      }}
+      component={ordersHistoryStack}
+    />
 
 
   </Drawer.Navigator>

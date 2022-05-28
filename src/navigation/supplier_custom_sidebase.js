@@ -1,0 +1,512 @@
+import { StyleSheet, View, Text, Image, TouchableOpacity, SafeAreaView } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
+
+
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import React,{useState,useEffect} from 'react'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import Entypo from 'react-native-vector-icons/Entypo'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import Feather from 'react-native-vector-icons/Feather'
+  const logout = (props)=>{
+     AsyncStorage.removeItem("user")
+    props.navigation.reset({
+      index: 0,
+      routes: [{ name: 'AuthNavigator', screen: 'signin' }]
+  });
+
+  }
+
+const SupplierCustomSidebar = (props)=>{
+    const { state, descriptors, navigation } = props;
+    let lastGroupName = '';
+    let newGroup = true;
+    return(
+        <SafeAreaView style={{ flex: 1 }}>
+        <TouchableOpacity onPress={()=>props.navigation.navigate('profile')}>
+         {/* <Image source={require('../assets/images/old-woman.png')} style={{width:100,height:100,alignSelf: 'center',marginTop:20}}/> */}
+        <FontAwesome name="user-circle-o" style={{alignSelf: 'center',marginTop:20}} size={90} color="blue"/>
+
+         </TouchableOpacity>
+        <DrawerContentScrollView showsVerticalScrollIndicator={false} {...props}>
+          {state.routes.map((route) => {
+            const {
+              drawerLabel,
+              activeTintColor,
+              groupName
+            } = descriptors[route.key].options;
+        if(drawerLabel == "Dashboard"){
+            return <DrawerItem
+            key={route.key}
+            style={{marginTop:drawerLabel=="Dashboard"?20:10,backgroundColor:'#F0F0F0',
+            borderColor:'#F0F0F0',
+            width:'92.3%',
+            borderWidth:1,
+            borderRadius:5,}}
+            label={
+              ({ color }) =>
+                <Text style={{ color }}>
+                  {drawerLabel}
+                </Text>
+            } 
+            icon={({color,size})=>{
+              if(drawerLabel == "Orders" || drawerLabel == "Received Orders" || drawerLabel == "Orders History"){
+           
+                return   <Feather name="package" color="black" size={20}/>
+              
+              }else if(drawerLabel == "Dashboard"){
+                return   <FontAwesome name="dashboard" color="black" size={20}/>
+
+              }else if(drawerLabel == "Hash Tags"){
+                return   <Feather name="hash" color="black" size={20}/>
+
+              }else if(drawerLabel == "Create Group"){
+                return  <FontAwesome name="group" color="black" size={20}/>
+              }else if(drawerLabel == "Send Item"){
+                return  <FontAwesome name="send" color="black" size={20}/>
+
+              }else if(drawerLabel == 'Add item'){
+                return <AntDesign name="pluscircleo" color="black" size={20}/>
+              }
+              } 
+            }
+            
+            focused={
+              state.routes.findIndex(
+                (e) => e.name === route.name
+              ) === state.index
+            }
+            activeTintColor={activeTintColor}
+            
+            onPress={() => navigation.navigate(route.name)}
+          />
+          }else if( drawerLabel == "Orders History"){
+            return <DrawerItem
+          key={route.key}
+          style={{marginTop:drawerLabel=="Home"?20:10,backgroundColor:'#F0F0F0',
+          borderColor:'#F0F0F0',
+          width:'92.3%',
+          borderWidth:1,
+          borderRadius:5,}}
+          label={
+            ({ color }) =>
+              <Text style={{ color }}>
+                {drawerLabel}
+              </Text>
+          } 
+          icon={({color,size})=>{
+            if(drawerLabel == "Orders" || drawerLabel == "Received Orders" || drawerLabel == "Orders History"){
+         
+              return   <Feather name="package" color="black" size={20}/>
+            
+            }else if(drawerLabel == "Home"){
+              return   <Entypo name="home" color="black" size={20}/>
+
+            }else if(drawerLabel == "Hash Tags"){
+              return   <Feather name="hash" color="black" size={20}/>
+
+            }else if(drawerLabel == "Create Group"){
+              return  <FontAwesome name="group" color="black" size={20}/>
+            }else if(drawerLabel == "Send Item"){
+              return  <FontAwesome name="send" color="black" size={20}/>
+
+            }else if(drawerLabel == 'Add item'){
+              return <AntDesign name="pluscircleo" color="black" size={20}/>
+            }
+            } 
+          }
+          
+          focused={
+            state.routes.findIndex(
+              (e) => e.name === route.name
+            ) === state.index
+          }
+          activeTintColor={activeTintColor}
+          
+          onPress={() => navigation.navigate(route.name)}
+        />
+          }
+          else if( drawerLabel == "Hash Tags"){
+            return <DrawerItem
+          key={route.key}
+          style={{marginTop:drawerLabel=="Home"?20:10,backgroundColor:'#F0F0F0',
+          borderColor:'#F0F0F0',
+          width:'92.3%',
+          borderWidth:1,
+          borderRadius:5,}}
+          label={
+            ({ color }) =>
+              <Text style={{ color }}>
+                {drawerLabel}
+              </Text>
+          } 
+          icon={({color,size})=>{
+            if(drawerLabel == "Orders" || drawerLabel == "Received Orders" || drawerLabel == "Orders History"){
+         
+              return   <Feather name="package" color="black" size={20}/>
+            
+            }else if(drawerLabel == "Home"){
+              return   <Entypo name="home" color="black" size={20}/>
+
+            }else if(drawerLabel == "Hash Tags"){
+              return   <Feather name="hash" color="black" size={20}/>
+
+            }else if(drawerLabel == "Create Group"){
+              return  <FontAwesome name="group" color="black" size={20}/>
+            }else if(drawerLabel == "Send Item"){
+              return  <FontAwesome name="send" color="black" size={20}/>
+
+            }else if(drawerLabel == 'Add item'){
+              return <AntDesign name="pluscircleo" color="black" size={20}/>
+            }
+            } 
+          }
+          
+          focused={
+            state.routes.findIndex(
+              (e) => e.name === route.name
+            ) === state.index
+          }
+          activeTintColor={activeTintColor}
+          
+          onPress={() => navigation.navigate(route.name)}
+        />
+          }else if(drawerLabel == "Received Orders"){
+            return <DrawerItem
+            key={route.key}
+            style={{marginTop:drawerLabel=="Home"?20:10,backgroundColor:'#F0F0F0',
+            borderColor:'#F0F0F0',
+            width:'92.3%',
+            borderWidth:1,
+            borderRadius:5,}}
+            label={
+              ({ color }) =>
+                <Text style={{ color }}>
+                  {drawerLabel}
+                </Text>
+            } 
+            icon={({color,size})=>{
+              if(drawerLabel == "Orders" || drawerLabel == "Received Orders" || drawerLabel == "Orders History"){
+           
+                return   <Feather name="package" color="black" size={20}/>
+              
+              }else if(drawerLabel == "Home"){
+                return   <Entypo name="home" color="black" size={20}/>
+
+              }else if(drawerLabel == "Hash Tags"){
+                return   <Feather name="hash" color="black" size={20}/>
+
+              }else if(drawerLabel == "Create Group"){
+                return  <FontAwesome name="group" color="black" size={20}/>
+              }else if(drawerLabel == "Send Item"){
+                return  <FontAwesome name="send" color="black" size={20}/>
+
+              }else if(drawerLabel == 'Add item'){
+                return <AntDesign name="pluscircleo" color="black" size={20}/>
+              }
+              } 
+            }
+            
+            focused={
+              state.routes.findIndex(
+                (e) => e.name === route.name
+              ) === state.index
+            }
+            activeTintColor={activeTintColor}
+            
+            onPress={() => navigation.navigate(route.name)}
+          />
+          }else if(drawerLabel == "Orders History"){
+            return <DrawerItem
+            key={route.key}
+            style={{marginTop:drawerLabel=="Home"?20:10,backgroundColor:'#F0F0F0',
+            borderColor:'#F0F0F0',
+            width:'92.3%',
+            borderWidth:1,
+            borderRadius:5,}}
+            label={
+              ({ color }) =>
+                <Text style={{ color }}>
+                  {drawerLabel}
+                </Text>
+            } 
+            icon={({color,size})=>{
+              if(drawerLabel == "Orders" || drawerLabel == "Received Orders" || drawerLabel == "Orders History"){
+           
+                return   <Feather name="package" color="black" size={20}/>
+              
+              }else if(drawerLabel == "Home"){
+                return   <Entypo name="home" color="black" size={20}/>
+
+              }else if(drawerLabel == "Hash Tags"){
+                return   <Feather name="hash" color="black" size={20}/>
+
+              }else if(drawerLabel == "Create Group"){
+                return  <FontAwesome name="group" color="black" size={20}/>
+              }else if(drawerLabel == "Send Item"){
+                return  <FontAwesome name="send" color="black" size={20}/>
+
+              }else if(drawerLabel == 'Add item'){
+                return <AntDesign name="pluscircleo" color="black" size={20}/>
+              }
+              } 
+            }
+            
+            focused={
+              state.routes.findIndex(
+                (e) => e.name === route.name
+              ) === state.index
+            }
+            activeTintColor={activeTintColor}
+            
+            onPress={() => navigation.navigate(route.name)}
+          />
+          }else if(drawerLabel == "Create Group"){
+            return <DrawerItem
+            key={route.key}
+            style={{marginTop:drawerLabel=="Home"?20:10,backgroundColor:'#F0F0F0',
+            borderColor:'#F0F0F0',
+            width:'92.3%',
+            borderWidth:1,
+            borderRadius:5,}}
+            label={
+              ({ color }) =>
+                <Text style={{ color }}>
+                  {drawerLabel}
+                </Text>
+            } 
+            icon={({color,size})=>{
+              if(drawerLabel == "Orders" || drawerLabel == "Received Orders" || drawerLabel == "Orders History"){
+           
+                return   <Feather name="package" color="black" size={20}/>
+              
+              }else if(drawerLabel == "Home"){
+                return   <Entypo name="home" color="black" size={20}/>
+
+              }else if(drawerLabel == "Hash Tags"){
+                return   <Feather name="hash" color="black" size={20}/>
+
+              }else if(drawerLabel == "Create Group"){
+                return  <FontAwesome name="group" color="black" size={20}/>
+              }else if(drawerLabel == "Send Item"){
+                return  <FontAwesome name="send" color="black" size={20}/>
+
+              }else if(drawerLabel == 'Add item'){
+                return <AntDesign name="pluscircleo" color="black" size={20}/>
+              }
+              } 
+            }
+            
+            focused={
+              state.routes.findIndex(
+                (e) => e.name === route.name
+              ) === state.index
+            }
+            activeTintColor={activeTintColor}
+            
+            onPress={() => navigation.navigate(route.name)}
+          />
+          }else if(drawerLabel == "Colors"){
+            return <DrawerItem
+            key={route.key}
+            style={{marginTop:drawerLabel=="Home"?20:10,backgroundColor:'#F0F0F0',
+            borderColor:'#F0F0F0',
+            width:'92.3%',
+            borderWidth:1,
+            borderRadius:5,}}
+            label={
+              ({ color }) =>
+                <Text style={{ color }}>
+                  {drawerLabel}
+                </Text>
+            } 
+            icon={({color,size})=>{
+              if(drawerLabel == "Orders" || drawerLabel == "Received Orders" || drawerLabel == "Orders History"){
+           
+                return   <Feather name="package" color="black" size={20}/>
+              
+              }else if(drawerLabel == "Home"){
+                return   <Entypo name="home" color="black" size={20}/>
+
+              }else if(drawerLabel == "Hash Tags"){
+                return   <Feather name="hash" color="black" size={20}/>
+
+              }else if(drawerLabel == "Create Group"){
+                return  <FontAwesome name="group" color="black" size={20}/>
+              }else if(drawerLabel == "Send Item"){
+                return  <FontAwesome name="send" color="black" size={20}/>
+
+              }else if(drawerLabel == 'Colors'){
+                return <Ionicons name="color-fill" color="black" size={20}/>
+              }
+              } 
+            }
+            
+            focused={
+              state.routes.findIndex(
+                (e) => e.name === route.name
+              ) === state.index
+            }
+            activeTintColor={activeTintColor}
+            
+            onPress={() => navigation.navigate(route.name)}
+          />
+          }else if(drawerLabel == "Sizes"){
+            return <DrawerItem
+            key={route.key}
+            style={{marginTop:drawerLabel=="Home"?20:10,backgroundColor:'#F0F0F0',
+            borderColor:'#F0F0F0',
+            width:'92.3%',
+            borderWidth:1,
+            borderRadius:5,}}
+            label={
+              ({ color }) =>
+                <Text style={{ color }}>
+                  {drawerLabel}
+                </Text>
+            } 
+            icon={({color,size})=>{
+              if(drawerLabel == "Orders" || drawerLabel == "Received Orders" || drawerLabel == "Orders History"){
+           
+                return   <Feather name="package" color="black" size={20}/>
+              
+              }else if(drawerLabel == "Home"){
+                return   <Entypo name="home" color="black" size={20}/>
+
+              }else if(drawerLabel == "Hash Tags"){
+                return   <Feather name="hash" color="black" size={20}/>
+
+              }else if(drawerLabel == "Create Group"){
+                return  <FontAwesome name="group" color="black" size={20}/>
+              }else if(drawerLabel == "Send Item"){
+                return  <FontAwesome name="send" color="black" size={20}/>
+
+              }else if(drawerLabel == 'Sizes'){
+                return <Entypo name="resize-100" color="black" size={20}/>
+              }
+              } 
+            }
+            
+            focused={
+              state.routes.findIndex(
+                (e) => e.name === route.name
+              ) === state.index
+            }
+            activeTintColor={activeTintColor}
+            
+            onPress={() => navigation.navigate(route.name)}
+          />
+          }else if( drawerLabel == "Add item"){
+            return <DrawerItem
+            key={route.key}
+            style={{marginTop:drawerLabel=="Home"?20:10,backgroundColor:'#F0F0F0',
+            borderColor:'#F0F0F0',
+            width:'92.3%',
+            borderWidth:1,
+            borderRadius:5,}}
+            label={
+              ({ color }) =>
+                <Text style={{ color }}>
+                  {drawerLabel}
+                </Text>
+            } 
+            icon={({color,size})=>{
+              if(drawerLabel == "Orders" || drawerLabel == "Received Orders" || drawerLabel == "Orders History"){
+           
+                return   <Feather name="package" color="black" size={20}/>
+              
+              }else if(drawerLabel == "Home"){
+                return   <Entypo name="home" color="black" size={20}/>
+
+              }else if(drawerLabel == "Hash Tags"){
+                return   <Feather name="hash" color="black" size={20}/>
+
+              }else if(drawerLabel == "Create Group"){
+                return  <FontAwesome name="group" color="black" size={20}/>
+              }else if(drawerLabel == "Send Item"){
+                return  <FontAwesome name="send" color="black" size={20}/>
+
+              }else if(drawerLabel == 'Add item'){
+                return <AntDesign name="pluscircleo" color="black" size={20}/>
+              }
+              } 
+            }
+            
+            focused={
+              state.routes.findIndex(
+                (e) => e.name === route.name
+              ) === state.index
+            }
+            activeTintColor={activeTintColor}
+            
+            onPress={() => navigation.navigate(route.name)}
+          />
+          }else if( drawerLabel == "Send Item"){
+            return <DrawerItem
+            key={route.key}
+            style={{marginTop:drawerLabel=="Home"?20:10,backgroundColor:'#F0F0F0',
+            borderColor:'#F0F0F0',
+            width:'92.3%',
+            borderWidth:1,
+            borderRadius:5,}}
+            label={
+              ({ color }) =>
+                <Text style={{ color }}>
+                  {drawerLabel}
+                </Text>
+            } 
+            icon={({color,size})=>{
+              if(drawerLabel == "Orders" || drawerLabel == "Received Orders" || drawerLabel == "Orders History"){
+           
+                return   <Feather name="package" color="black" size={20}/>
+              
+              }else if(drawerLabel == "Home"){
+                return   <Entypo name="home" color="black" size={20}/>
+
+              }else if(drawerLabel == "Hash Tags"){
+                return   <Feather name="hash" color="black" size={20}/>
+
+              }else if(drawerLabel == "Create Group"){
+                return  <FontAwesome name="group" color="black" size={20}/>
+              }else if(drawerLabel == "Send Item"){
+                return  <FontAwesome name="send" color="black" size={20}/>
+
+              }else if(drawerLabel == 'Add item'){
+                return <AntDesign name="pluscircleo" color="black" size={20}/>
+              }
+              } 
+            }
+            
+            focused={
+              state.routes.findIndex(
+                (e) => e.name === route.name
+              ) === state.index
+            }
+            activeTintColor={activeTintColor}
+            
+            onPress={() => navigation.navigate(route.name)}
+          />
+          }
+        })}
+ <TouchableOpacity onPress={()=>logout(props)} style={{flexDirection: 'row',
+      alignItems: 'center',
+      marginTop:10,
+      height:50,
+      marginLeft:10,
+      backgroundColor:'#F0F0F0',
+      borderColor:'#F0F0F0',
+      width:'92.3%',
+      borderWidth:1,
+      borderRadius:5}}>
+        <FontAwesome name="sign-out" color="black" size={20} style={{marginLeft:10}}/>
+        
+        <Text style={{marginLeft:30}}>Sign out</Text>
+         </TouchableOpacity>
+    </DrawerContentScrollView>
+    </SafeAreaView>
+    )
+}
+
+export default SupplierCustomSidebar

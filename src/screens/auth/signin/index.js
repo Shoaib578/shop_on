@@ -43,10 +43,20 @@ class Signin extends React.Component {
             if(res.data.msg == "logged in Succesfully"){
                 this.setState({is_loading:false,})
                await AsyncStorage.setItem("user",JSON.stringify(res.data.user))
+               console.log(res.data.user.role)
+               if(res.data.user.role == "supplier"){
+                this.props.navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'SupplierNavigator', screen: 'Dashboard' }]
+                });
+                
+               }else{
                 this.props.navigation.reset({
                     index: 0,
                     routes: [{ name: 'MainNavigator', screen: 'Home' }]
                 });
+               }
+               
             }else{
                 Alert.alert(res.data.msg)
                 this.setState({is_loading:false})

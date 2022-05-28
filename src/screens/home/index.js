@@ -38,9 +38,11 @@ export default class Home extends React.Component {
         const parse  = JSON.parse(user)
         Axios.get(base_url+'/apis/item/get_new_items?user_id='+parse._id)
         .then(res=>{
-           
-
-            this.setState({data:res.data.items},()=>{
+            let new_items = []
+            res.data.items.forEach(items=>{
+                new_items.push(items.items[0])
+            })
+            this.setState({data:new_items},()=>{
                 this.setState({is_loading:false})
             })
         })
@@ -65,6 +67,16 @@ export default class Home extends React.Component {
         }else{
             this.getNewItems()
         }
+        this.props.navigation.addListener("focus",()=>{
+            if(role == "supplier"){
+                this.getSupplierItems()
+            }else{
+                this.getNewItems()
+            }
+    
+    
+          })
+
     }
 
  
