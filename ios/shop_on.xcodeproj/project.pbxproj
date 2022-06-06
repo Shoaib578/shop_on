@@ -32,6 +32,7 @@
 		E33D29A7CC5F47E99CA29D7E /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 20DC7107E59748D79B9ECD94 /* Octicons.ttf */; };
 		DA55D3FFFAA046B7B720B9E7 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 358A1C304AF84F8A9F8211E5 /* SimpleLineIcons.ttf */; };
 		ED95A02CD1D84A11A62617B5 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 37B0BD35C31447EDACD84030 /* Zocial.ttf */; };
+		12F8F2971B97465F8D3AF3B4 /* libRCTContactsWrapper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C09B984462294F90B6478813 /* libRCTContactsWrapper.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +81,8 @@
 		20DC7107E59748D79B9ECD94 /* Octicons.ttf */ = {isa = PBXFileReference; name = "Octicons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		358A1C304AF84F8A9F8211E5 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		37B0BD35C31447EDACD84030 /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		433E0F567CB5485C94AC0F8F /* ContactsWrapper.xcodeproj */ = {isa = PBXFileReference; name = "ContactsWrapper.xcodeproj"; path = "../node_modules/react-native-contacts-wrapper/ios/ContactsWrapper.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		C09B984462294F90B6478813 /* libRCTContactsWrapper.a */ = {isa = PBXFileReference; name = "libRCTContactsWrapper.a"; path = "libRCTContactsWrapper.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +99,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C80B921A6F3F58F76C31292 /* libPods-shop_on.a in Frameworks */,
+				12F8F2971B97465F8D3AF3B4 /* libRCTContactsWrapper.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +149,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				433E0F567CB5485C94AC0F8F /* ContactsWrapper.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -531,6 +536,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/shop_on.app/shop_on";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/..",
+				);
 			};
 			name = Debug;
 		};
@@ -555,6 +568,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/shop_on.app/shop_on";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/..",
+				);
 			};
 			name = Release;
 		};
@@ -581,6 +602,10 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/..",
+				);
 			};
 			name = Debug;
 		};
@@ -605,6 +630,10 @@
 				PRODUCT_NAME = shop_on;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/..",
+				);
 			};
 			name = Release;
 		};

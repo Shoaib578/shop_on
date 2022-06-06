@@ -64,7 +64,7 @@ export default class Orders extends React.Component {
    
                    <View style={{ flexDirection:'row',justifyContent:'space-between',marginTop:10,borderBottomWidth:1,borderColor:'black',width:'95%' }}>
                    <Text style={{ fontSize:15 }}>Total Price</Text>
-                   <Text style={{ right:20,fontSize:15,color:'blue',fontWeight:'bold' }}>{order.price}{order.currency}</Text>
+                   <Text style={{ right:20,fontSize:15,color:'blue',fontWeight:'bold' }}>{order.price} {order.currency}</Text>
                    </View>
    
    

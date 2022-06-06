@@ -353,7 +353,54 @@ const SupplierCustomSidebar = (props)=>{
             
             onPress={() => navigation.navigate(route.name)}
           />
-          }else if(drawerLabel == "Sizes"){
+          }
+          else if(drawerLabel == "Contacts"){
+            return <DrawerItem
+            key={route.key}
+            style={{marginTop:drawerLabel=="Home"?20:10,backgroundColor:'#F0F0F0',
+            borderColor:'#F0F0F0',
+            width:'92.3%',
+            borderWidth:1,
+            borderRadius:5,}}
+            label={
+              ({ color }) =>
+                <Text style={{ color }}>
+                  {drawerLabel}
+                </Text>
+            } 
+            icon={({color,size})=>{
+              if(drawerLabel == "Orders" || drawerLabel == "Received Orders" || drawerLabel == "Orders History"){
+           
+                return   <Feather name="package" color="black" size={20}/>
+              
+              }else if(drawerLabel == "Home"){
+                return   <Entypo name="home" color="black" size={20}/>
+
+              }else if(drawerLabel == "Hash Tags"){
+                return   <Feather name="hash" color="black" size={20}/>
+
+              }else if(drawerLabel == "Create Group"){
+                return  <FontAwesome name="group" color="black" size={20}/>
+              }else if(drawerLabel == "Send Item"){
+                return  <FontAwesome name="send" color="black" size={20}/>
+
+              }else if(drawerLabel == 'Contacts'){
+                return <FontAwesome name="phone" color="black" size={20}/>
+              }
+              } 
+            }
+            
+            focused={
+              state.routes.findIndex(
+                (e) => e.name === route.name
+              ) === state.index
+            }
+            activeTintColor={activeTintColor}
+            
+            onPress={() => navigation.navigate(route.name)}
+          />
+          }
+          else if(drawerLabel == "Sizes"){
             return <DrawerItem
             key={route.key}
             style={{marginTop:drawerLabel=="Home"?20:10,backgroundColor:'#F0F0F0',

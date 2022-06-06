@@ -25,6 +25,8 @@ target 'shop_on' do
 
   pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
 
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+
   target 'shop_onTests' do
     inherit! :complete
     # Pods for testing

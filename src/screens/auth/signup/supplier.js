@@ -85,6 +85,7 @@ class Supplier extends React.Component {
         Axios.post(base_url+"/apis/user/sign_up",data)
         .then(res=>{
            Alert.alert(res.data.msg)
+           if(res.data.msg != "User Already Exist"){
            this.setState({ company_name:"",
            company_code:'',
            password:"",
@@ -98,7 +99,11 @@ class Supplier extends React.Component {
            country:'',
            city:'',
            state:''})
+           this.props.navigation.goBack(null)
+           this.props.navigation.goBack(null)
+           }
         })
+       
         .catch(err=>{
             Alert.alert("Something Went Wrong")
             this.setState({is_loading:false})
@@ -147,7 +152,7 @@ class Supplier extends React.Component {
 
             <View style={styles.text_input}>
             <Feather name="lock" style={styles.phoneImageStyle} color="white" size={25}/>
-            <TextInput placeholder="4 digit numeric pin" value={this.state.password} secureTextEntry onChangeText={(val)=>this.setState({password:val})} selectionColor="white" placeholderTextColor="#DBDBDB" style={{flex:1,color:'white'}} 
+            <TextInput placeholder="4 digit numeric pin" keyboardType='numeric' value={this.state.password} secureTextEntry onChangeText={(val)=>this.setState({password:val})} selectionColor="white" placeholderTextColor="#DBDBDB" style={{flex:1,color:'white'}} 
             />
             </View>
 

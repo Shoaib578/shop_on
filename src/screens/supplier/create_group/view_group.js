@@ -1,5 +1,5 @@
 import React from 'react'
-import {View,Text,StyleSheet,TextInput,Dimensions,Image,ScrollView,ActivityIndicator,Alert,Button} from 'react-native'
+import {View,Text,StyleSheet,TextInput,Dimensions,Image,ScrollView,ActivityIndicator,Alert,Button,PermissionsAndroid,Platform} from 'react-native'
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -9,6 +9,7 @@ import base_url from '../../../base_url'
 import Modal from "react-native-modal";
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+
 const data2 = [
     { label: '', value: ''}
   
@@ -31,6 +32,31 @@ export default class ViewGroup extends React.Component {
         })
     }
 
+
+   
+    
+      getContacts = async()=>{
+            const user = await AsyncStorage.getItem("user")
+            const parse = JSON.parse(user)
+            Axios.get(base_url+'/apis/contacts/get_contacts?user_id='+parse._id)
+            .then(res=>{
+              res.data.contacts.forEach(data=>{
+                console.log(data)
+                data2.push( { label: data.user_name, value: data.user_phone_no})
+                
+            })
+            console.log(data2)
+            data2.shift()
+            this.setState({users_data:data2})
+            })
+          
+         
+         
+      
+      
+       
+  }
+
     getAllbuyers = ()=>{
         Axios.get(base_url+'/apis/groups/get_all_users')
         .then(res=>{
@@ -48,17 +74,25 @@ export default class ViewGroup extends React.Component {
 
 
     }
-
+   
     addUser = ()=>{
+      if(this.state.selected_user == ''){
+        
+        Alert.alert("Please Select User")
+        return false
+
+
+      }
         let data={
             "group_id":this.props.route.params.group_id,
-            "user_id":this.state.selected_user.value
+            "user_phone_number":this.state.selected_user.value,
+            "user_name":this.state.selected_user.label
         }
 
         Axios.post(base_url+'/apis/groups/add_user',data)
         .then(res=>{
             Alert.alert(res.data.msg)
-            this.setState({selected_user:''})
+           
             this.getGroupUsers()
         })
         .catch(err=>{
@@ -87,10 +121,17 @@ export default class ViewGroup extends React.Component {
 
         }
     }
-    componentDidMount(){
-        this.getGroupUsers()
-        this.getAllbuyers()
-        
+   async componentDidMount(){
+     await   this.getContacts()
+
+     await   this.getGroupUsers()
+
+
+        this.props.navigation.addListener("focaus",async()=>{
+         await this.getContacts()
+
+         await   this.getGroupUsers()
+        })
        
     }
 
@@ -102,12 +143,12 @@ export default class ViewGroup extends React.Component {
                     <FontAwesome name="plus" color="#193ed1" size={25}/>
                 </TouchableOpacity>
                     {this.state.users.length>0?<ScrollView style={{flex:1,marginTop:20}}>
-                        {this.state.users.map(data=>(
-                        <View key={data} style={styles.item_container}>
+                        {this.state.users.map((data,index)=>(
+                        <View key={index} style={styles.item_container}>
                         <View style={{flexDirection: 'row',}}>
                         <FontAwesome name= "user-circle-o" color="red" size={20}/>
 
-                        <Text style={{color:'#BB952D',left:8}}>{data.users[0].buyer.name}</Text>
+                        <Text style={{color:'#BB952D',left:8}}>{data.user_name}</Text>
                         </View>
                         
 

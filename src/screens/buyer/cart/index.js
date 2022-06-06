@@ -53,6 +53,7 @@ export default class Cart extends React.Component {
                     "item_id":cart.item_id,
                     "amount":cart.amount,
                     "cart_id":cart._id,
+                    "currency":cart.currency,
                     "size":cart.size,
                     "color":cart.color,
                     "price":parseFloat(cart.item[0].price)*Number(cart.amount),
@@ -97,7 +98,7 @@ export default class Cart extends React.Component {
                         <TouchableOpacity>
         
                         <Text style={{color:'black',}}>{data.item[0].item_name}</Text>
-                        <Text style={{color:'#193ed1',fontWeight:'bold'}}>Total Price : ${parseFloat(data.item[0].price)*Number(data.amount)}</Text>
+                        <Text style={{color:'#193ed1',fontWeight:'bold'}}>Total Price : {parseFloat(data.item[0].price)*Number(data.amount)} {data.item[0].currency}</Text>
                         <Text style={{color:'black',fontWeight:'bold'}}>Amount :{data.amount}</Text>
                         <Text style={{color:'black',fontWeight:'bold'}}>Color :{data.color}</Text>
                         <Text style={{color:'black',fontWeight:'bold'}}>Size :{data.size}</Text>

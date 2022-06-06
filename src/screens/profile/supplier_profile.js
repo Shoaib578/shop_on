@@ -26,7 +26,8 @@ class SupplierProfile extends React.Component {
         address:'',
         country:'',
         city:'',
-        state:''
+        state:'',
+        prev_phone_no:''
       
     }
 
@@ -89,6 +90,7 @@ class SupplierProfile extends React.Component {
                  "currency":this.state.currency,
                 "email":this.state.email,
                 "phone_no":this.state.phone_no,
+
                 "postal_code":this.state.postal_code,
                 "name":this.state.name,
                 "address":this.state.address,
@@ -152,7 +154,8 @@ class SupplierProfile extends React.Component {
                 address:res.data.user.supplier.address,
                 country:res.data.user.supplier.country,
                 city:res.data.user.supplier.city,
-                state:res.data.user.supplier.state
+                state:res.data.user.supplier.state,
+                prev_phone_no:res.data.user.phone_no
             })
         })
     }

@@ -16,7 +16,7 @@ export default class Search extends React.Component {
       const user = await AsyncStorage.getItem("user")
       const parse = JSON.parse(user)
       this.setState({is_loading:true})
-      Axios.get(base_url+'/apis/item/search_item?user_id='+parse._id+'&&search='+search)
+      Axios.get(base_url+'/apis/item/search_item?user_phone_number='+parse.phone_no+'&&search='+search)
       .then(res=>{
         this.setState({data:res.data.items},()=>{
           this.setState({is_loading:false})

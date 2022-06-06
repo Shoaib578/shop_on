@@ -26,21 +26,30 @@ class ViewProduct extends React.Component {
         page:0,
         my_id:'',
         color:'',
-        size:''
+        size:'',
+        owner_name:'',
+        owner_id:'',
+        my_id:'',
+
+        check_access_loading:true
     }
 
    
     ViewItem = ()=>{
         Axios.get(base_url+'/apis/item/view_item?item_id='+this.props.route.params.id)
         .then(res=>{
-            console.log(res.data.item)
-            this.setState({data:res.data.item})
+            
+            this.setState({data:res.data.item,owner_name:res.data.item.user[0].supplier.company_name,owner_id:res.data.item.user[0]._id})
         })
     }
    
     addToCart = async()=>{
         const user= await AsyncStorage.getItem("user")
         const parse = JSON.parse(user)
+        if(this.state.quantity<1){
+            Alert.alert("Amount Must Be Greater than 0")
+            return false
+        }
         if(this.state.color == null || this.state.size == null || this.state.quantity == null){
             Alert.alert("Fields are required")
             return false
@@ -72,11 +81,21 @@ class ViewProduct extends React.Component {
         
     }
 
- 
+    DeleteItem =(id)=>{
+        Axios.get(base_url+'/apis/item/delete_item?item_id='+id)
+        .then(res=>{
+          this.props.navigation.goBack(null)
+        })
+        .catch(err=>{
+            Alert.alert(err.message)
+        })
+    }
     getUserRole = async()=>{
         const user = await AsyncStorage.getItem("user")
         const parse = JSON.parse(user)
-        this.setState({role:parse.role})
+        this.setState({role:parse.role,my_id:parse._id},()=>{
+            this.setState({check_access_loading:false})
+        })
     }
   
     componentDidMount(){
@@ -112,8 +131,21 @@ class ViewProduct extends React.Component {
                     circleLoop
                     parentWidth={width}
                     />
-    
-              
+                    {this.state.check_access_loading == false?<View>
+                    {this.state.my_id == this.state.owner_id ?
+                    <View style={{flexDirection:'row',justifyContent:'space-between',padding:20}}>
+                    <TouchableOpacity onPress={()=>this.DeleteItem(this.state.data._id)} >
+                        <FontAwesome name="trash" color="red" size={25}/>
+                    </TouchableOpacity>
+
+
+                    <TouchableOpacity onPress={()=>this.props.navigation.navigate('edit_item',{id:this.state.data._id})} >
+                        <AntDesign name="edit" color="blue" size={25}/>
+                    </TouchableOpacity>
+                    </View>
+                    :null}
+                    </View>:null}
+                    
                 
     
               
@@ -126,7 +158,15 @@ class ViewProduct extends React.Component {
     
                     <View style={{ marginLeft:Dimensions.get('window').width*2/40 }}>
                     <Text style={{ fontWeight:'bold',fontSize:16 }}>Details</Text>
-    
+                    
+                    <View style={{ flexDirection:'row',justifyContent:'space-between',marginTop:10,borderBottomWidth:1,borderColor:'black',width:'95%' }}>
+                    <Text style={{ fontSize:15 }}>Owner</Text>
+                    <TouchableOpacity style={{marginRight:20,}} onPress={()=>this.props.navigation.navigate('view_supplier',{id:this.state.owner_id})}>
+                    <Text style={{ fontSize:15,color:'blue' }}>{this.state.owner_name}</Text>
+
+                    </TouchableOpacity>
+                    </View>
+
                     <View style={{ flexDirection:'row',justifyContent:'space-between',marginTop:10,borderBottomWidth:1,borderColor:'black',width:'95%' }}>
                     <Text style={{ fontSize:15 }}>Price</Text>
                     <Text style={{ right:20,fontSize:15 }}>{this.state.data.price}{this.state.data.currency}</Text>
@@ -167,6 +207,10 @@ class ViewProduct extends React.Component {
                     <TextInput placeholder="" value={this.state.quantity.toString()} onChangeText={(val)=>this.setState({quantity:val})} keyboardType="numeric"  placeholderTextColor="black" style={{flex:1,color:'black'}} 
                     />
                     </View>
+
+
+                   {this.state.data.colors?<View>
+
                     <Text style={{marginLeft:10,top:10}}>Color*</Text>
 
                     <View style={{ borderWidth:1,borderColor:'#57b5b6',borderRadius:5,width:'95%',marginTop:20,alignSelf:'center',height:50 }}>
@@ -190,6 +234,9 @@ class ViewProduct extends React.Component {
                 </Picker>
 
                 </View>
+                </View>:null}
+
+                {this.state.data.sizes?<View>
 
 
                     <Text style={{marginLeft:10,top:10}}>Size*</Text>
@@ -215,6 +262,8 @@ class ViewProduct extends React.Component {
                 </Picker>
 
                 </View>
+                </View>:null}
+
     
                     <TouchableOpacity disabled={this.state.cart_loading} onPress={this.addToCart} style={[styles.profile_screen_card,{backgroundColor:'#57b5b6',marginBottom:50}]} >
                    

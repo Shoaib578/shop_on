@@ -19,6 +19,7 @@ class BuyerProfile extends React.Component {
        
         is_loading:false,
         name:'',
+        prev_phone_no:''
        
       
     }
@@ -27,7 +28,7 @@ class BuyerProfile extends React.Component {
         const parse = JSON.parse(user)
         Axios.get(base_url+'/apis/user/profile_screen?user_id='+parse._id)
         .then(res=>{
-            this.setState({name:res.data.user.buyer.name,phone_no:res.data.user.phone_no})
+            this.setState({name:res.data.user.buyer.name,phone_no:res.data.user.phone_no,prev_phone_no:res.data.user.phone_no})
         })
     }
 
@@ -60,7 +61,7 @@ class BuyerProfile extends React.Component {
                 "role":"buyer",
 
                 "user_id":parse._id,
-                "phone_no":this.state.phone_no,
+                "phone_no":this.state.phone_no == this.state.prev_phone_no?'':this.state.phone_no,
              
                 "name":this.state.name,
               
@@ -71,7 +72,7 @@ class BuyerProfile extends React.Component {
                 "role":"buyer",
 
                 "user_id":parse._id,
-                "phone_no":this.state.phone_no,
+                "phone_no":this.state.phone_no == this.state.prev_phone_no?'':this.state.phone_no,
              
                 "name":this.state.name,
                 "password":this.state.password,

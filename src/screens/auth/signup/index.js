@@ -5,9 +5,9 @@ import Supplier from './supplier'
 export default class Signup extends React.Component {
     render(){
         if(this.props.route.params.category == 'supplier') {
-            return <Supplier />
+            return <Supplier navigation={this.props.navigation}/>
         }else{
-            return <Buyer />
+            return <Buyer navigation={this.props.navigation}/>
         }
     }
 }

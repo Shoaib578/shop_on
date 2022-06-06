@@ -3,16 +3,15 @@ import {View,Text,Button, ScrollView, Dimensions,TextInput,TouchableOpacity,Imag
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {Picker} from '@react-native-picker/picker';
 import ImagePicker from 'react-native-image-crop-picker';
+import Modal from "react-native-modal";
 
 import Tags from "react-native-tags";
 import Axios from 'axios'
-import base_url from '../../../base_url'
+import base_url from '../../base_url';
 import MultiSelect from 'react-native-multiple-select';
-import Modal from "react-native-modal";
-
 let colors = []
 let sizes = []
-export default class Additem extends React.Component {
+export default class Edititem extends React.Component {
   constructor(props){
     super(props)
     this.colorRef = ''
@@ -34,91 +33,122 @@ export default class Additem extends React.Component {
       all_sizes:[],
       add_product_loading:false,
 
-
       picker1_visible:false,
       picker2_visible:false,
       picker3_visible:false,
-
   }
 
   }
    
-    pickImage1 =  () => {
-       ImagePicker.openPicker({
-        cropping: true,
-        width: 300,
-        height: 400,
-       
-        
-       })
-       .then(image=>{
-         console.log(image)
-         this.setState({
-          product_image1:image,
-          picker1_visible:false
-        });
-       })
-       
+  pickImage1 =  () => {
+    ImagePicker.openPicker({
+     cropping: true,
+     width: 300,
+     height: 400,
+    
      
-      }
+    })
+    .then(image=>{
+      console.log(image)
+      this.setState({
+       product_image1:image,
+       picker1_visible:false,
+     });
+    })
+    
+  
+   }
+pickImage2 =  () => {
+     ImagePicker.openPicker({
+       width: 300,
+       height: 400,
+       cropping: true,
+      
+      })
+      .then(image=>{
+        console.log(image)
+        this.setState({
+         product_image2:image,
+         picker2_visible:false,
+       });
+      })
+  
+   }
+pickImage3 =  () => {
+     ImagePicker.openPicker({
+       width: 300,
+       height: 400,
+       cropping: true
+      })
+      .then(image=>{
+        console.log(image)
+        this.setState({
+         product_image3:image,
+         picker3_visible:false,
+       });
+      })
+  
+   }
 
 
-      CamPickImage1 = ()=>{
-        ImagePicker.openCamera({
-          cropping: true,
-          width: 300,
-          height: 400,
-         
-          
-         })
-         .then(image=>{
-           console.log(image)
-           this.setState({
 
-            product_image1:image,
-          picker1_visible:false,
+   CamPickImage1 = ()=>{
+    ImagePicker.openCamera({
+      cropping: true,
+      width: 300,
+      height: 400,
+     
+      
+     })
+     .then(image=>{
+       console.log(image)
+       this.setState({
 
-          });
-         })
-      }
+        product_image1:image,
+      picker1_visible:false,
 
-
-      CamPickImage2 = ()=>{
-        ImagePicker.openCamera({
-          cropping: true,
-          width: 300,
-          height: 400,
-         
-          
-         })
-         .then(image=>{
-           console.log(image)
-           this.setState({
-            product_image2:image,
-          picker2_visible:false,
-
-          });
-         })
-      }
+      });
+     })
+  }
 
 
-      CamPickImage3 = ()=>{
-        ImagePicker.openCamera({
-          cropping: true,
-          width: 300,
-          height: 400,
-         
-          
-         })
-         .then(image=>{
-           console.log(image)
-           this.setState({
-            product_image3:image,
-          picker3_visible:false,
+  CamPickImage2 = ()=>{
+    ImagePicker.openCamera({
+      cropping: true,
+      width: 300,
+      height: 400,
+     
+      
+     })
+     .then(image=>{
+       console.log(image)
+       this.setState({
+        product_image2:image,
+      picker2_visible:false,
 
-          });
-         })
-      }
+      });
+     })
+  }
+
+
+  CamPickImage3 = ()=>{
+    ImagePicker.openCamera({
+      cropping: true,
+      width: 300,
+      height: 400,
+     
+      
+     })
+     .then(image=>{
+       console.log(image)
+       this.setState({
+        product_image3:image,
+      picker3_visible:false,
+
+      });
+     })
+  }
+
 
       validate = ()=>{
         if(this.state.product_image1 == ''){
@@ -148,26 +178,7 @@ export default class Additem extends React.Component {
         return true
       }
 
-      pickImage2 =  () => {
-        ImagePicker.openPicker({
-          width: 300,
-          height: 400,
-          cropping: true
-         })
-         .then(image=>{
-           console.log(image)
-           this.setState({
-            product_image2:image,
-          picker2_visible:false,
-
-          });
-         })
-     
-      }
-
-
-     
-
+    
       getCurrency = async()=>{
         const user = await AsyncStorage.getItem("user")
         const parse = JSON.parse(user)
@@ -176,27 +187,7 @@ export default class Additem extends React.Component {
           this.setState({currency:res.data.currency})
         })
       }
-      pickImage3 =  () => {
-        ImagePicker.openPicker({
-          width: 300,
-          height: 400,
-          cropping: true
-         })
-         .then(image=>{
-           console.log(image)
-           this.setState({
-            product_image3:image,
-          picker3_visible:false,
-
-          });
-         })
      
-      }
-
-
-   
-
-
       ColoronSelect = colors=> {
      this.setState({colors})
     } 
@@ -222,7 +213,7 @@ export default class Additem extends React.Component {
     }
 
 
-    add_item = async()=>{
+    update_item = async()=>{
       const user = await AsyncStorage.getItem("user")
       const parse = JSON.parse(user)
       const validated = this.validate()
@@ -233,17 +224,8 @@ export default class Additem extends React.Component {
         this.setState({is_loading:true})
        
         var formData= new FormData()
-        let image_1_match = /\.(\w+)$/.exec(this.state.product_image1);
-        let image1_type = image_1_match ? `image/${image_1_match[1]}` : `image`;
 
-
-        let image_2_match = /\.(\w+)$/.exec(this.state.product_image2);
-        let image2_type = image_2_match ? `image/${image_2_match[1]}` : `image`;
-
-
-
-        let image_3_match = /\.(\w+)$/.exec(this.state.product_image3);
-        let image3_type = image_3_match ? `image/${image_3_match[1]}` : `image`;
+        formData.append('item_id',this.props.route.params.id)
        
           formData.append('item_name',this.state.product_name)
           formData.append('item_description',this.state.product_description)
@@ -256,68 +238,52 @@ export default class Additem extends React.Component {
           formData.append('hash_tag',this.state.hash_tag)
           formData.append('added_by',parse._id)
 
-          
-          formData.append('image1',{
-            name: this.state.product_image1.path.split('/').pop(),
-            type: this.state.product_image1.mime,
-            uri: Platform.OS === 'ios' ? this.state.product_image1.path.replace('file://', '') : this.state.product_image1.path,
-          })
-          if(this.state.product_image2.path){
+          if(this.state.product_image1.path){
+            formData.append('item_image1','image1')
 
-          formData.append('product_image2','image2')
-         formData.append('image2',{
-            name: this.state.product_image2.path.split('/').pop(),
-            type: this.state.product_image2.mime,
-            uri: Platform.OS === 'ios' ? this.state.product_image2.path.replace('file://', '') : this.state.product_image2.path,
-          })
 
-        }
-        if(this.state.product_image3.path){
-          formData.append('product_image3','image3')
-
-          formData.append('image3',{
-            name: this.state.product_image3.path.split('/').pop(),
-            type: this.state.product_image3.mime,
-            uri: Platform.OS === 'ios' ? this.state.product_image3.path.replace('file://', '') : this.state.product_image3.path,
-          })
-        }
+            formData.append('image1',{
+              name: this.state.product_image1.path.split('/').pop(),
+              type: this.state.product_image1.mime,
+              uri: Platform.OS === 'ios' ? this.state.product_image1.path.replace('file://', '') : this.state.product_image1.path,
+            })
+          }
          
 
+          if(this.state.product_image2.path){
+            formData.append('item_image2','image2')
 
+            formData.append('image2',{
+              name: this.state.product_image2.path.split('/').pop(),
+              type: this.state.product_image2.mime,
+              uri: Platform.OS === 'ios' ? this.state.product_image2.path.replace('file://', '') : this.state.product_image2.path,
+            })
+          }
        
-       
+          if(this.state.product_image3.path){
+            formData.append('item_image3','image3')
 
-        
+            formData.append('image3',{
+              name: this.state.product_image3.path.split('/').pop(),
+              type: this.state.product_image3.mime,
+              uri: Platform.OS === 'ios' ? this.state.product_image3.path.replace('file://', '') : this.state.product_image3.path,
+            })
+          }
 
-
+      
 
           
 
-
-
-          Axios.post(base_url+'/apis/item/add_item',formData)
+          Axios.post(base_url+'/apis/item/edit_item',formData)
           .then(res=>{
-            this.setState({
-                  product_image2:'',
-                  product_image1:'',
-      
-                  product_image3:'',
-                   
-                  product_name:'',
-                  product_description:'',
-                  sku_code:'',
-                  hash_tag:'',
-                  price:'',
-                  is_loading:false
-                })
-                Alert.alert("Added Succesfully")
+            this.setState({is_loading:false})
+            Alert.alert("Updated Succesfully")
           })
           .catch(err=>{
+            Alert.alert("Something Went Wrong")
             this.setState({is_loading:false})
-            Alert.alert(err.message)
+
           })
-          
-      
         }else{
           Alert.alert("Please Add a Currency from your profile")
           return false
@@ -328,6 +294,27 @@ export default class Additem extends React.Component {
       
         
 
+    }
+
+
+    getItem = ()=>{
+        Axios.get(base_url+'/apis/item/view_item?item_id='+this.props.route.params.id)
+        .then(res=>{
+          console.log(res.data.item.item_image3)
+            this.setState({
+                product_image1:res.data.item.item_image1,
+                product_image2:res.data.item.item_image2,
+                product_image3:res.data.item.item_image3,
+                product_name:res.data.item.item_name,
+                product_description:res.data.item.item_description,
+                sku_code:res.data.item.sku_code,
+                hash_tag:res.data.item.hash_tag,
+                price:res.data.item.price,
+                colors:[...res.data.item.colors.split(',')],
+                sizes:[...res.data.item.sizes.split(',')],
+
+            })
+        })
     }
 
     get_colors = async()=>{
@@ -362,9 +349,12 @@ export default class Additem extends React.Component {
       this.get_colors()
       this.get_sizes()
       this.getCurrency()
+      this.getItem()
       this.props.navigation.addListener("focus",()=>{
         this.getHashTags()
       this.get_colors()
+      this.getItem()
+
       this.get_sizes()
         this.getCurrency()
 
@@ -380,18 +370,20 @@ export default class Additem extends React.Component {
                    
                 <View style={{ flexDirection:'row',flexWrap:'wrap',justifyContent: 'space-between',marginTop:20 }}>
                     <TouchableOpacity onPress={()=>this.setState({picker1_visible:true})} style={{ borderWidth:1,borderColor:'#193ed1',alignItems:'center',justifyContent:'center',padding:10,width:100,height:100,borderRadius:5 }}>
-                    {this.state.product_image1?<Image style={{width:90,height:90,borderRadius:5}} source={{uri:this.state.product_image1.path}}/>:<Image style={{width:90,height:90,borderRadius:5}} source={require('../../../assets/images/pick_image.png')}/>}
+                    {this.state.product_image1?<Image style={{width:90,height:90,borderRadius:5}} source={{uri: this.state.product_image1.path?this.state.product_image1.path:base_url+'/uploads/'+this.state.product_image1}}/>:<Image style={{width:90,height:90,borderRadius:5}} source={require('../../assets/images/pick_image.png')}/>}
                       
                     </TouchableOpacity>
 
 
                     <TouchableOpacity onPress={()=>this.setState({picker2_visible:true})} style={{ borderWidth:1,borderColor:'#193ed1',alignItems:'center',justifyContent:'center',padding:10,width:100,height:100,borderRadius:5 }}>
-                    {this.state.product_image2?<Image style={{width:90,height:90,borderRadius:5}} source={{uri:this.state.product_image2.path}}/>:<Image style={{width:90,height:90,borderRadius:5}} source={require('../../../assets/images/pick_image.png')}/>}
+                    {this.state.product_image2?<Image style={{width:90,height:90,borderRadius:5}} source={{uri: this.state.product_image2.path?this.state.product_image2.path:base_url+'/uploads/'+this.state.product_image2}}/>:<Image style={{width:90,height:90,borderRadius:5}} source={require('../../assets/images/pick_image.png')}/>}
+
                     </TouchableOpacity>
 
 
                     <TouchableOpacity onPress={()=>this.setState({picker3_visible:true})} style={{ borderWidth:1,borderColor:'#193ed1',alignItems:'center',justifyContent:'center',padding:10,width:100,height:100,borderRadius:5,marginRight:10 }}>
-                        <Image source={this.state.product_image3?{uri:this.state.product_image3.path}:require('../../../assets/images/pick_image.png')} style={{width:90,height:90,borderRadius:5}}/>
+                    {this.state.product_image3?<Image style={{width:90,height:90,borderRadius:5}} source={{uri: this.state.product_image3.path?this.state.product_image3.path:base_url+'/uploads/'+this.state.product_image3}}/>:<Image style={{width:90,height:90,borderRadius:5}} source={require('../../assets/images/pick_image.png')}/>}
+
                     </TouchableOpacity>
 
                     </View>
@@ -558,10 +550,10 @@ export default class Additem extends React.Component {
 
                
            
-            <TouchableOpacity onPress={this.add_item} style={[styles.AddProductBtn,{flexDirection:'row'}]}>
+            <TouchableOpacity onPress={this.update_item} style={[styles.AddProductBtn,{flexDirection:'row'}]}>
             {this.state.is_loading?<ActivityIndicator size="large" color="white" />:null}
 
-                <Text style={{color:'white'}}>Add Product</Text>
+                <Text style={{color:'white'}}>Update Product</Text>
             </TouchableOpacity>
               </View>
             )} >
@@ -572,8 +564,7 @@ export default class Additem extends React.Component {
 
                 </FlatList>
 
-
-
+                
                 <Modal isVisible={this.state.picker1_visible}>
                 <View style={{ flex: 1,marginTop:'50%' }}>
                 <Button title='Pick from library' onPress={this.pickImage1}/>
@@ -614,6 +605,9 @@ export default class Additem extends React.Component {
                <Button title='close' onPress={()=>this.setState({picker3_visible:false})}/>
                 </View>
               </Modal>
+
+
+
             </View>
         )
     }

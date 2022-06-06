@@ -12,7 +12,7 @@ export default class Product extends React.Component {
             <TouchableWithoutFeedback onPress={()=>this.props.navigation.navigate('view_item',{id:this.props.data.item._id})}>
                 <Image source={{uri:base_url+'/uploads/'+this.props.data.item.item_image1}} style={styles.product_image}/>
                 <Text style={{textAlign: 'center',color:'black'}}>{this.props.data.item.item_name}</Text>
-                <Text style={{textAlign: 'center',color:'#193ed1',fontWeight:'bold'}}>${this.props.data.item.price}</Text>
+                <Text style={{textAlign: 'center',color:'#193ed1',fontWeight:'bold'}}>{this.props.data.item.price} {this.props.data.item.currency}</Text>
 
             </TouchableWithoutFeedback>
             </View>

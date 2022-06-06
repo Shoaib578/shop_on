@@ -87,7 +87,7 @@ class Signin extends React.Component {
 
                 <View style={styles.text_input}>
                 <Feather name="smartphone" style={styles.phoneImageStyle} color="white" size={25}/>
-                <TextInput placeholder="Digit Mobile Number +9....." onChangeText={(val)=>this.setState({phone_no:val})} value={this.state.phone_no} selectionColor="white"  placeholderTextColor="#DBDBDB" style={{flex:1,color:'white'}} 
+                <TextInput placeholder="Digit Mobile Number"  onChangeText={(val)=>this.setState({phone_no:val})} value={this.state.phone_no} selectionColor="white"  placeholderTextColor="#DBDBDB" style={{flex:1,color:'white'}} 
                 />
                 </View>
 
