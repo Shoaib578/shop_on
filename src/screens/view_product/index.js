@@ -97,7 +97,19 @@ class ViewProduct extends React.Component {
             this.setState({check_access_loading:false})
         })
     }
-  
+    
+
+    DeleteNewItem = (id)=>{
+        Axios.get(base_url+'/apis/item/delete_new_item?item_id='+id)
+        .then(res=>{
+            this.props.navigation.goBack(null)
+          
+        })
+        .catch(err=>{
+            Alert.alert("Something Went Wrong")
+        })
+
+    }
     componentDidMount(){
         this.getUserRole()
         .then(()=>{
@@ -147,7 +159,18 @@ class ViewProduct extends React.Component {
                     </View>:null}
                     
                 
-    
+                    {this.state.check_access_loading == false?<View>
+                    {this.state.my_id != this.state.owner_id ?
+                    
+                    <TouchableOpacity style={{marginLeft:'85%',marginTop:10}} onPress={()=>this.DeleteNewItem(this.state.data._id)} >
+                        <FontAwesome name="trash" color="red" size={25}/>
+                    </TouchableOpacity>
+
+
+                
+                   
+                    :null}
+                    </View>:null}    
               
     
     
