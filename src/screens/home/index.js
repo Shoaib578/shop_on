@@ -15,14 +15,24 @@ export default class Home extends React.Component {
         is_loading:true,
         visible_modal:false,
         currency:'',
-        currency_btn_loading:false
+        currency_btn_loading:false,
+
+        role:''
     }
 
     getUserRole = async()=>{
         const user = await AsyncStorage.getItem("user")
         const parse = JSON.parse(user)
-       
+        
         return parse.role
+    }
+
+
+    UserRoleState = async()=>{
+        const user = await AsyncStorage.getItem('user')
+        const parse = JSON.parse(user)
+        this.setState({role:parse.role})
+
     }
 
     addCurrency = async()=>{
@@ -85,8 +95,9 @@ export default class Home extends React.Component {
         Axios.get(base_url+'/apis/item/get_new_items?user_phone_number='+parse.phone_no)
         .then(res=>{
             let new_items = []
+            console.log(res.data.items)
             res.data.items.forEach(items=>{
-                new_items.push(items.items[0])
+                new_items.push(items)
             })
             this.setState({data:new_items},()=>{
                 this.setState({is_loading:false})
@@ -107,7 +118,7 @@ export default class Home extends React.Component {
 
    async componentDidMount(){
         let role =await this.getUserRole()
-        
+        this.UserRoleState()
         if(role == "supplier"){
             this.getCurrency()
             this.getSupplierItems()
@@ -115,6 +126,8 @@ export default class Home extends React.Component {
             this.getNewItems()
         }
         this.props.navigation.addListener("focus",()=>{
+        this.UserRoleState()
+
             if(role == "supplier"){
             this.getCurrency()
 
@@ -135,6 +148,21 @@ export default class Home extends React.Component {
             
               
                      <View style={styles.container}>
+                        {this.state.role == "buyer"?<FlatList data={this.state.data} 
+                        numColumns={2}
+                        keyExtractor={(item) => item._id}
+
+                        refreshing={this.state.is_loading}
+                         onRefresh={()=>this.Refresh()}
+                        
+                        
+                        renderItem={(data)=>(
+                            <Product data={data} type="buyer" navigation={this.props.navigation}/>
+
+                        )}
+                        
+                        />:
+                        
                         <FlatList data={this.state.data} 
                         numColumns={2}
                         keyExtractor={(item) => item._id}
@@ -144,11 +172,12 @@ export default class Home extends React.Component {
                         
                         
                         renderItem={(data)=>(
-                            <Product data={data} navigation={this.props.navigation}/>
+                            <Product data={data} type="supplier" navigation={this.props.navigation}/>
 
                         )}
                         
                         />
+                        }
 
                 <Modal isVisible={this.state.visible_modal}>
               <View style={{ flex: 1,marginTop:'50%' }}>

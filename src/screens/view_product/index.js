@@ -162,7 +162,7 @@ class ViewProduct extends React.Component {
                     {this.state.check_access_loading == false?<View>
                     {this.state.my_id != this.state.owner_id ?
                     
-                    <TouchableOpacity style={{marginLeft:'85%',marginTop:10}} onPress={()=>this.DeleteNewItem(this.state.data._id)} >
+                    <TouchableOpacity style={{marginLeft:'85%',marginTop:10}} onPress={()=>this.DeleteNewItem(this.props.route.params.new_item_id)} >
                         <FontAwesome name="trash" color="red" size={25}/>
                     </TouchableOpacity>
 
