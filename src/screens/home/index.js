@@ -149,7 +149,7 @@ export default class Home extends React.Component {
               
                      <View style={styles.container}>
                         {this.state.role == "buyer"?<FlatList data={this.state.data} 
-                        numColumns={2}
+                        numColumns={1}
                         keyExtractor={(item) => item._id}
 
                         refreshing={this.state.is_loading}
@@ -157,7 +157,7 @@ export default class Home extends React.Component {
                         
                         
                         renderItem={(data)=>(
-                            <Product data={data} type="buyer" navigation={this.props.navigation}/>
+                            <Product data={data} type="buyer"  getNewItems={this.getNewItems} navigation={this.props.navigation}/>
 
                         )}
                         
