@@ -134,7 +134,7 @@ export default class SelectUser extends React.Component {
     }
     async componentDidMount(){
      await   this.getContacts()
-
+        console.log(this.props.route.params.id)
      this.props.navigation.addListener("focus",async()=>{
         if(this.state.select == "users"){
          await this.getContacts()

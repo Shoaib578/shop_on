@@ -7,7 +7,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import  Axios  from 'axios'
 import base_url from '../../../base_url'
 
-let all_ids = []
 
 export default class SendItemByHashTag extends React.Component{
     state = {
@@ -27,6 +26,7 @@ export default class SendItemByHashTag extends React.Component{
         this.setState({is_loading:true})
         Axios.get(base_url+'/apis/item/search_item_by_hashtag?hash_tag='+hash_tag+'&&user_id='+parse._id)
         .then(res=>{
+            let all_ids = []
             
             this.setState({data:res.data.items})
 
@@ -34,9 +34,11 @@ export default class SendItemByHashTag extends React.Component{
             this.state.data.forEach(data=>{
                 console.log(data)
                 all_ids.push(data._id)
-                this.setState({is_loading:false})
-                this.setState({selected_items:all_ids})
             })
+
+            this.setState({selected_items:all_ids})
+
+            this.setState({is_loading:false})
 
 
         })
@@ -54,6 +56,8 @@ export default class SendItemByHashTag extends React.Component{
       }
       select_item = (id)=>{
         console.log(id)
+        let all_ids = []
+
         let exist = all_ids.includes(id)
         if(exist){
             all_ids.filter(i=>{
@@ -76,11 +80,9 @@ export default class SendItemByHashTag extends React.Component{
 
 
       choose_user = ()=>{
-          this.state.data.forEach(data=>{
-              all_ids.push(data._id)
-          })
+        
 
-            this.props.navigation.navigate('select_user',{id:all_ids})
+            this.props.navigation.navigate('select_user',{id:this.state.selected_items})
       }
       componentDidMount(){
           this.getHashTags()
@@ -92,7 +94,7 @@ export default class SendItemByHashTag extends React.Component{
 
           this.props.navigation.addListener("focus",()=>{
             this.getHashTags()
-            this.SearchProductByHashTag('')
+          
             .then(res=>{
                 this.setState({is_loading:false})
             })
